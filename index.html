@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Куратор | Шаблоны ответов + Психогигиена</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 { font-size: 2.2em; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1.1em; }
+
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            border-radius: 10px;
+            padding: 5px;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 0;
+            min-height: 70vh;
+        }
+
+        @media (max-width: 968px) {
+            .content { grid-template-columns: 1fr; }
+        }
+
+        /* Sidebar с шаблонами и самопомощью */
+        .sidebar {
+            background: #f8f9fa;
+            border-right: 2px solid #e9ecef;
+            padding: 25px;
+            overflow-y: auto;
+            max-height: 85vh;
+        }
+
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Экстренная панель куратора */
+        .emergency-panel {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(238, 90, 111, 0.3);
+        }
+
+        .emergency-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .emergency-btn {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            text-align: left;
+        }
+
+        .emergency-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(3px);
+        }
+
+        .emergency-btn.calming {
+            background: rgba(72, 187, 120, 0.3);
+            border-color: rgba(72, 187, 120, 0.5);
+        }
+
+        .template-category {
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .template-category:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .category-header {
+            background: #e7f3ff;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #004085;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .category-header.selfcare {
+            background: #e6f4ea;
+            color: #1e7e34;
+        }
+
+        .category-header::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .category-header.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .template-list {
+            display: none;
+            padding: 10px;
+        }
+
+        .template-list.open {
+            display: block;
+        }
+
+        .template-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            border-left: 3px solid #667eea;
+            transition: all 0.2s;
+        }
+
+        .template-item:hover {
+            background: #e9ecef;
+            transform: translateX(3px);
+        }
+
+        .template-item .label {
+            font-size: 0.75em;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .template-item .preview {
+            color: #555;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Main area */
+        .main-area {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            max-height: 85vh;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .panel-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* AI Settings */
+        .ai-settings {
+            background: #e7f3ff;
+            border: 2px solid #b3d9ff;
+        }
+
+        .setting-row { margin-bottom: 15px; }
+        
+        .setting-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #004085;
+            font-size: 0.9em;
+        }
+
+        select, input[type="password"], input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Selfcare tab specific styles */
+        .selfcare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .selfcare-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .selfcare-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .selfcare-card.urgent {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .selfcare-card.sadness {
+            border-color: #74c0fc;
+            background: #f0f9ff;
+        }
+
+        .selfcare-card.prevent {
+            border-color: #51cf66;
+            background: #f3fcf5;
+        }
+
+        .card-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checklist-item:hover {
+            background: white;
+            transform: translateX(3px);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checklist-item.checked {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .technique-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 0.95em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .technique-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .technique-btn::before {
+            content: '▶';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: #667eea;
+        }
+
+        .technique-btn:hover::before {
+            opacity: 1;
+        }
+
+        .timer-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+
+        .breathing-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: transform 4s ease-in-out;
+            cursor: pointer;
+        }
+
+        .breathing-circle.inhale { transform: scale(1.3); }
+        .breathing-circle.exhale { transform: scale(1); }
+
+        .state-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .state-normal { background: #d4edda; color: #155724; }
+        .state-warning { background: #fff3cd; color: #856404; }
+        .state-danger { background: #f8d7da; color: #721c24; }
+
+        .results-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .variant-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .variant-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .variant-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+
+        .btn-copy { background: #28a745; color: white; }
+        .btn-use { background: #667eea; color: white; }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .hidden { display: none !important; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .formula-hint {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+        }
+
+        table.reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+
+        table.reference-table th,
+        table.reference-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table.reference-table th {
+            background: #e9ecef;
+            font-weight: 600;
+        }
+
+        table.reference-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .resource-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .resource-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+        }
+
+        .sound-wave {
+            height: 30px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin: 10px 0;
+            opacity: 0;
+            transform: scaleX(0);
+            transition: all 0.3s;
+        }
+
+        .sound-wave.active {
+            opacity: 1;
+            transform: scaleX(1);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .content { grid-template-columns: 1fr; }
+            .sidebar { max-height: none; border-right: none; border-bottom: 2px solid #e9ecef; }
+            .emergency-panel { position: relative; }
+            .selfcare-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Куратор + 🧘 Забота о себе</h1>
+            <p>Шаблоны ответов по формуле эмпатии + Психогигиена для куратора</p>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('templates')" id="tab-templates">📋 Шаблоны ответов</button>
+                <button class="tab" onclick="switchTab('ai')" id="tab-ai">🤖 AI Генерация</button>
+                <button class="tab" onclick="switchTab('selfcare')" id="tab-selfcare">🧘 Самопомощь</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Экстренная панель для куратора (видна всегда) -->
+                <div class="emergency-panel">
+                    <div class="emergency-title">🆘 Экстренная пауза</div>
+                    <div style="font-size: 0.9em; margin-bottom: 12px; opacity: 0.95;">
+                        Если чувствуете, что «закипаете» или накрывает:
+                    </div>
+                    <button class="emergency-btn" onclick="quickTechnique('breathe')">🫁 Дыхание 5/8 (1 мин)</button>
+                    <button class="emergency-btn" onclick="quickTechnique('water')">💧 Холодная вода на запястья</button>
+                    <button class="emergency-btn" onclick="quickTechnique('fists')">✊ Сжать-разжать кулаки 7 раз</button>
+                    <button class="emergency-btn calming" onclick="quickTechnique('step')">👣 Отойти от экрана на 3 шага</button>
+                    <button class="emergency-btn calming" onclick="quickTechnique('name')">📝 Назвать эмоцию вслух</button>
+                    <button class="emergency-btn" onclick="quickTechnique('jar')" style="background: rgba(255,255,255,0.25);">🫙 Крик в банку</button>
+                </div>
+
+                <!-- Библиотека шаблонов -->
+                <div id="templatesSidebar">
+                    <div class="sidebar-title">📚 Библиотека ответов</div>
+                    
+                    <!-- Категории шаблонов -->
+                    <div class="template-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>😕 Растерянность</span>
+                            <span class="badge" style="background: #fff3cd; color: #856404;">не понимаю</span>
+                        </div>
+                        <div class="template-list">
+                            <div class="template-item" onclick="useTemplate('confused1')">
+                                <div class="label">Полный шаблон</div>
+                                <div class="preview">Я понимаю, что сейчас это вызывает сложности...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('confused2')">
+                                <div class="label">Готовый</div>
+                                <div class="preview">Вижу, что вы запутались. Это бывает у всех...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>😤 Раздражение</span>
+                            <span class="badge" style="background: #f8d7da; color: #721c24;">капслок</span>
+                        </div>
+                        <div class="template-list">
+                            <div class="template-item" onclick="useTemplate('frustrated1')">
+                                <div class="label">Шаблон</div>
+                                <div class="preview">Слышу ваше раздражение — и согласен...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('frustrated2')">
+                                <div class="label">Готовый</div>
+                                <div class="preview">Понимаю, что это бесит. Сам бы расстроился...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>😡 Гнев</span>
+                            <span class="badge" style="background: #f5c6cb; color: #721c24;">осторожно</span>
+                        </div>
+                        <div class="template-list">
+                            <div class="template-item" onclick="useTemplate('angry1')">
+                                <div class="label">С границами</div>
+                                <div class="preview">Я вижу, что вы очень сильно расстроены...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('angry2')">
+                                <div class="label">Конструктивный</div>
+                                <div class="preview">Я слышу вашу злость, и это понятно...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>😔 Обида</span>
+                            <span class="badge" style="background: #d1ecf1; color: #0c5460;">разочарование</span>
+                        </div>
+                        <div class="template-list">
+                            <div class="template-item" onclick="useTemplate('disappointed1')">
+                                <div class="label">Шаблон</div>
+                                <div class="preview">Я понимаю ваше разочарование...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('disappointed2')">
+                                <div class="label">Готовый</div>
+                                <div class="preview">Очень жаль, что вы разочарованы...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>🛡️ Границы</span>
+                            <span class="badge" style="background: #d4edda; color: #155724;">техника «И»</span>
+                        </div>
+                        <div class="template-list">
+                            <div class="template-item" onclick="useTemplate('boundary1')">
+                                <div class="label">Отказ мягкий</div>
+                                <div class="preview">Я понимаю, И правила созданы...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('boundary2')">
+                                <div class="label">Про родных</div>
+                                <div class="preview">Я вижу, что вы хотите помочь близким...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-category">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <span>🔁 Универсальные</span>
+                            <span class="badge" style="background: #e2e3e5; color: #383d41;">любой случай</span>
+                        </div>
+                        <div class="template-list">
+                            <div class="template-item" onclick="useTemplate('universal')">
+                                <div class="label">Общий</div>
+                                <div class="preview">Я слышу, что вы расстроены...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('repeat')">
+                                <div class="label">В 100-й раз</div>
+                                <div class="preview">Вижу, что вопрос не до конца ясен...</div>
+                            </div>
+                            <div class="template-item" onclick="useTemplate('general')">
+                                <div class="label">«Всё плохо!»</div>
+                                <div class="preview">Я понимаю, что кажется всё валится...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Самопомощь (показывается в режиме selfcare) -->
+                <div id="selfcareSidebar" class="hidden">
+                    <div class="sidebar-title">🧘 Ресурсы</div>
+                    <div class="template-category">
+                        <div class="category-header selfcare" onclick="toggleCategory(this)">
+                            <span>Быстрая диагностика</span>
+                        </div>
+                        <div class="template-list open">
+                            <div style="padding: 10px; font-size: 0.9em; color: #666;">
+                                <strong>Сейчас я чувствую:</strong>
+                                <div style="margin-top: 8px;">
+                                    <label style="display: block; margin-bottom: 5px; cursor: pointer;">
+                                        <input type="radio" name="current-emotion" value="anger" onchange="updateSelfcare('anger')"> Раздражение/гнев
+                                    </label>
+                                    <label style="display: block; margin-bottom: 5px; cursor: pointer;">
+                                        <input type="radio" name="current-emotion" value="sadness" onchange="updateSelfcare('sadness')"> Печаль/усталость
+                                    </label>
+                                    <label style="display: block; cursor: pointer;">
+                                        <input type="radio" name="current-emotion" value="normal" onchange="updateSelfcare('normal')" checked> В норме
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="template-category">
+                        <div class="category-header selfcare" onclick="toggleCategory(this)">
+                            <span>Моя копилка</span>
+                        </div>
+                        <div class="template-list">
+                            <div style="padding: 10px; font-size: 0.85em;">
+                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 6px;">
+                                    <strong>Тело:</strong> <span id="resource-body">тёплый плед, чай</span>
+                                </div>
+                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 6px;">
+                                    <strong>Мысль:</strong> <span id="resource-mind">"Я могу дать себе уверенность"</span>
+                                </div>
+                                <div style="padding: 8px; background: white; border-radius: 6px;">
+                                    <strong>Действие:</strong> <span id="resource-action">открыть форточку</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Area -->
+            <div class="main-area">
+                <!-- Вкладка Шаблонов -->
+                <div id="tab-content-templates">
+                    <div class="panel">
+                        <div class="panel-title">📨 Сообщение ученика</div>
+                        <textarea id="studentMessage" placeholder="Вставьте сюда сообщение ученика..."></textarea>
+                        
+                        <div class="formula-hint" id="formulaHint" style="display: none;">
+                            <strong>💡 Формула:</strong> <span id="formulaText"></span>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-title">✏️ Конструктор ответа</div>
+                        <div style="display: grid; gap: 15px;">
+                            <div>
+                                <label style="font-weight: 600; color: #667eea; font-size: 0.9em;">1. Принятие (эмоция услышана):</label>
+                                <textarea id="editAcceptance" class="edit-textarea" placeholder="Я понимаю..." style="min-height: 60px; margin-top: 5px;"></textarea>
+                            </div>
+                            <div>
+                                <label style="font-weight: 600; color: #28a745; font-size: 0.9em;">2. Нормализация (он не один):</label>
+                                <textarea id="editNormalization" class="edit-textarea" placeholder="Это нормально..." style="min-height: 60px; margin-top: 5px;"></textarea>
+                            </div>
+                            <div>
+                                <label style="font-weight: 600; color: #764ba2; font-size: 0.9em;">3. Решение (конкретные шаги):</label>
+                                <textarea id="editSolution" class="edit-textarea" placeholder="Давайте сделаем..." style="min-height: 60px; margin-top: 5px;"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-generate" onclick="copyEditedTemplate()" style="margin-top: 15px;">
+                            📋 Скопировать готовый ответ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Вкладка AI -->
+                <div id="tab-content-ai" class="hidden">
+                    <div class="panel">
+                        <div class="panel-title">📨 Сообщение ученика</div>
+                        <textarea id="aiStudentMessage" placeholder="Вставьте сюда сообщение ученика..."></textarea>
+                    </div>
+
+                    <div class="panel ai-settings">
+                        <div class="panel-title">⚙️ Настройки AI</div>
+                        
+                        <div class="setting-row">
+                            <label class="setting-label">Провайдер:</label>
+                            <select id="aiProvider" onchange="toggleProvider()">
+                                <option value="openai">OpenAI GPT-4</option>
+                                <option value="ollama">Ollama (локально)</option>
+                                <option value="anthropic">Anthropic Claude</option>
+                            </select>
+                        </div>
+
+                        <div id="cloudSettings">
+                            <div class="setting-row">
+                                <label class="setting-label">API Ключ:</label>
+                                <input type="password" id="apiKey" placeholder="sk-... или ant-...">
+                            </div>
+                        </div>
+
+                        <div id="ollamaSettings" class="hidden">
+                            <div class="setting-row">
+                                <label class="setting-label">URL Ollama:</label>
+                                <input type="text" id="ollamaUrl" value="http://localhost:11434">
+                            </div>
+                            <div class="setting-row">
+                                <label class="setting-label">Модель:</label>
+                                <select id="ollamaModel">
+                                    <option value="llama2">llama2</option>
+                                    <option value="mistral">mistral</option>
+                                    <option value="neural-chat">neural-chat</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-row">
+                            <label class="setting-label">Стиль:</label>
+                            <select id="temperature">
+                                <option value="0.3">🟢 Строгий</option>
+                                <option value="0.7" selected>🔵 Сбалансированный</option>
+                                <option value="1.0">🟠 Тёплый</option>
+                            </select>
+                        </div>
+
+                        <button class="btn-generate" onclick="generateAIResponse()" id="generateBtn">
+                            <span class="spinner" id="spinner"></span>
+                            <span id="btnText">✨ Сгенерировать</span>
+                        </button>
+
+                        <div id="errorMessage" class="error-message"></div>
+                    </div>
+
+                    <div id="aiResults" class="hidden">
+                        <div class="panel-title">📝 Варианты ответов</div>
+                        <div id="aiResponsesContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Вкладка Самопомощь -->
+                <div id="tab-content-selfcare" class="hidden">
+                    <div class="selfcare-grid">
+                        <!-- Диагностика -->
+                        <div class="panel selfcare-card">
+                            <div class="panel-title">🔍 Диагностика состояния</div>
+                            <p style="margin-bottom: 15px; color: #666; font-size: 0.95em;">
+                                Отметьте, что вы сейчас чувствуете в теле:
+                            </p>
+                            
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" onchange="event.stopPropagation()">
+                                <div>
+                                    <strong>Напряжение в шее/челюсти</strong><br>
+                                    <small style="color: #666;">Признак гнева/раздражения</small>
+                                </div>
+                            </div>
+                            
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" onchange="event.stopPropagation()">
+                                <div>
+                                    <strong>Учащённое дыхание</strong><br>
+                                    <small style="color: #666;">Стресс, готовность к конфликту</small>
+                                </div>
+                            </div>
+                            
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" onchange="event.stopPropagation()">
+                                <div>
+                                    <strong>Ком в горле, слёзы</strong><br>
+                                    <small style="color: #666;">Печаль, переживание</small>
+                                </div>
+                            </div>
+                            
+                            <div class="checklist-item" onclick="toggleCheck(this)">
+                                <input type="checkbox" onchange="event.stopPropagation()">
+                                <div>
+                                    <strong>Опущенные плечи, вялость</strong><br>
+                                    <small style="color: #666;">Усталость, горе</small>
+                                </div>
+                            </div>
+
+                            <div id="diagnosisResult" style="margin-top: 15px; padding: 12px; background: #e7f3ff; border-radius: 8px; display: none;">
+                                <strong>Рекомендация:</strong> <span id="diagnosisText"></span>
+                            </div>
+                        </div>
+
+                        <!-- Экстренная помощь -->
+                        <div class="panel selfcare-card urgent">
+                            <div class="panel-title">⚡ Экстренная разрядка (1-2 мин)</div>
+                            
+                            <button class="technique-btn" onclick="startBreathing()">
+                                🫁 Дыхание 5/8 (вдох 5, выдох 8)
+                            </button>
+                            
+                            <div id="breathingVisualizer" class="hidden" style="text-align: center; margin: 15px 0;">
+                                <div class="breathing-circle" id="breathCircle">Вдох</div>
+                                <div class="timer-display" id="breathTimer">Готов?</div>
+                                <button class="btn-small" onclick="stopBreathing()" style="margin-top: 10px;">Стоп</button>
+                            </div>
+
+                            <button class="technique-btn" onclick="showTechnique('water')">
+                                💧 Холодная вода на запястья
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('fists')">
+                                ✊ Сжать-разжать кулаки (7 раз)
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('step')">
+                                👣 Отойти на 3 шага от экрана
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('cry')">
+                                😢 Разрешить себе всплакнуть (30 сек)
+                            </button>
+
+                            <!-- НОВЫЕ ПРАКТИКИ -->
+                            <button class="technique-btn" onclick="showTechnique('jar')" style="border-color: #ff6b6b; background: #fff5f5;">
+                                🫙 Крик в банку (без звука)
+                            </button>
+                        </div>
+
+                        <!-- НОВЫЕ ПРАКТИКИ (5 минут) -->
+                        <div class="panel selfcare-card" style="border-color: #ffa94d; background: #fff9e6;">
+                            <div class="panel-title">🔥 Новые техники разрядки</div>
+                            
+                            <button class="technique-btn" onclick="showTechnique('towel')">
+                                🧺 Мять мокрое полотенце (сила в руках)
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('ice')">
+                                🧊 Ледяной куб (шок для нервов)
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('chew')">
+                                🍞 Жевание (снять напряжение челюсти)
+                            </button>
+
+                            <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9em; color: #666;">
+                                <strong>💡 Почему это работает:</strong><br>
+                                • <strong>Банка</strong> — заглушает крик, даёт безопасность<br>
+                                • <strong>Полотенце</strong> — расходует силу без урона<br>
+                                • <strong>Лёд</strong> — мгновенно переключает нервную систему<br>
+                                • <strong>Жевание</strong> — снимает зажим челюсти (гнев часто там)
+                            </div>
+                        </div>
+
+                        <!-- Активные техники -->
+                        <div class="panel selfcare-card sadness">
+                            <div class="panel-title">🎯 Если есть 5 минут</div>
+                            
+                            <button class="technique-btn" onclick="showTechnique('wood')">
+                                🪓 «Рубить дрова» (энергично руками)
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('tear')">
+                                📄 Рвать ненужную бумагу
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('pushups')">
+                                💪 Отжаться 10-15 раз (переключить энергию)
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('moan')">
+                                📢 Попричитать в голос ("Ой-йой-йой...")
+                            </button>
+                            
+                            <button class="technique-btn" onclick="showTechnique('dish')">
+                                🍽️ Помыть посуду (канализация через действие)
+                            </button>
+                        </div>
+
+                        <!-- Вопросы для себя -->
+                        <div class="panel selfcare-card prevent">
+                            <div class="panel-title">💬 Вопросы для проживания</div>
+                            <p style="margin-bottom: 15px; font-size: 0.9em; color: #666;">
+                                Если накрывает печаль, спросите себя:
+                            </p>
+                            
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                                <strong>Что я сейчас теряю?</strong>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                    Что уходит из моей жизни прямо сейчас?
+                                </div>
+                            </div>
+                            
+                            <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                                <strong>Чего я лишился?</strong>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                    Что было дорого в том, что ушло?
+                                </div>
+                            </div>
+                            
+                            <div style="background: white; padding: 15px; border-radius: 8px;">
+                                <strong>Что мне не хочется отпускать?</strong>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                    Признать потерю — шаг к принятию
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Таблица справочник -->
+                        <div class="panel" style="grid-column: 1 / -1;">
+                            <div class="panel-title">📋 Справочник: Эмоция → Действие</div>
+                            <table class="reference-table">
+                                <thead>
+                                    <tr>
+                                        <th>Эмоция</th>
+                                        <th>Сразу (1-2 мин)</th>
+                                        <th>Если есть 5 мин</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>😤 Раздражение/Гнев</strong></td>
+                                        <td>Выдох со звуком, выпить воды, сжать кулаки, отойти от экрана, <strong>🫙 крик в банку</strong></td>
+                                        <td>Потопать, побить подушку, «рубить дрова», дыхание 5/8, <strong>🧺 мять полотенце</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>😔 Печаль/Горе</strong></td>
+                                        <td>Разрешить всплакнуть, зевнуть с потягиванием, обнять себя, кран с водой</td>
+                                        <td>Попричитать, помыть посуду, написать ответы на вопросы о потере</td>
+                                    </tr>
+                                    <tr style="background: #fff9e6;">
+                                        <td><strong>🆘 Срочный сброс</strong></td>
+                                        <td><strong>🧊 Ледяной куб</strong> — держать до ощущения жжения (30 сек)</td>
+                                        <td><strong>🍞 Жевание</strong> — интенсивно 2 минуты</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Ресурсная копилка -->
+                        <div class="panel" style="grid-column: 1 / -1;">
+                            <div class="panel-title">🏦 Моя ресурсная копилка</div>
+                            <div class="resource-grid">
+                                <div class="resource-item">
+                                    <h4>🧣 Тело</h4>
+                                    <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
+                                        <li>Тёплый мягкий плед</li>
+                                        <li>Ароматный чай (как у мамы)</li>
+                                        <li>Любимое эфирное масло</li>
+                                    </ul>
+                                </div>
+                                <div class="resource-item">
+                                    <h4>🧠 Мысль</h4>
+                                    <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
+                                        <li>«Я сейчас большой/взрослый»</li>
+                                        <li>«Я могу дать себе уверенность»</li>
+                                        <li>«У меня всегда есть выбор»</li>
+                                    </ul>
+                                </div>
+                                <div class="resource-item">
+                                    <h4>🚶 Действие</h4>
+                                    <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
+                                        <li>Открыть форточку на 2 мин</li>
+                                        <li>Прогулка без телефона (20 мин)</li>
+                                        <li>Включить радостную песню</li>
+                                    </ul>
+                                </div>
+                                <div class="resource-item">
+                                    <h4>📸 Память</h4>
+                                    <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
+                                        <li>Семейные фото, где я счастлив</li>
+                                        <li>Ласковое имя из детства</li>
+                                        <li>Письмо благодарности себе</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Напоминание -->
+                        <div class="panel" style="grid-column: 1 / -1; background: #fff3cd; border-color: #ffc107;">
+                            <div class="panel-title" style="color: #856404;">⚠️ Памятка</div>
+                            <ul style="margin-left: 20px; line-height: 2; color: #856404;">
+                                <li><strong>«Сначала кислородную маску на себя»</strong> — вы не сможете помочь, если сами перегружены</li>
+                                <li><strong>Я проводник, а не спасатель</strong> — вы помогаете сделать первый шаг, а не несёте ответственность за чужое счастье</li>
+                                <li><strong>Называть эмоции</strong> — «Я сейчас злюсь» уже наполовину разряжает ситуацию</li>
+                                <li><strong>Маленькие шаги</strong> — лучше 1 минута дыхания сейчас, чем «завтра начну заботиться о себе»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // База шаблонов ответов ученикам
+        const templates = {
+            confused1: {
+                acceptance: "Я понимаю, что сейчас это вызывает сложности и путаницу.",
+                normalization: "Это нормально — на первых этапах многие участники проходят через похожее.",
+                solution: "Давайте разберёмся вместе. Напишите, на каком именно шаге возникла трудность?",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            confused2: {
+                acceptance: "Вижу, что вы запутались.",
+                normalization: "Это бывает почти у всех новичков, ничего страшного.",
+                solution: "Давайте я покажу простую последовательность: [шаг 1, шаг 2]. Справитесь?",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            frustrated1: {
+                acceptance: "Слышу ваше раздражение — и согласен, это действительно выматывает, когда что-то идёт не так.",
+                normalization: "Такое чувство знакомо каждому, кто осваивает новое.",
+                solution: "Давайте сейчас спокойно разберём, что именно случилось. Напишите подробнее — я помогу.",
+                formula: "Принятие + признание → Нормализация → Решение"
+            },
+            frustrated2: {
+                acceptance: "Понимаю, что это бесит. Честно, сам бы расстроился на вашем месте.",
+                normalization: "Такое бывает со всеми.",
+                solution: "Давайте вместо эмоций посмотрим на суть: что именно пошло не так? Я постараюсь решить вопрос быстро.",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            angry1: {
+                acceptance: "Я вижу, что вы очень сильно расстроены и злитесь.",
+                normalization: "Это нормально — реагировать так, когда кажется, что ситуация выходит из-под контроля.",
+                solution: "Давайте попробуем решить вопрос без перехода на личности. Я готов вам помочь, но для этого мне нужно понять, что именно произошло. Напишите факты — и мы вместе найдём выход.",
+                formula: "Принятие → Нормализация → Решение + границы"
+            },
+            angry2: {
+                acceptance: "Я слышу вашу злость, и это понятно.",
+                normalization: "Когда столкнешься с трудностями — нормально злиться.",
+                solution: "Но давайте сохраним диалог в конструктивном русле. Расскажите, с чем именно вы столкнулись? Я на вашей стороне и хочу помочь.",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            disappointed1: {
+                acceptance: "Я понимаю ваше разочарование — это действительно обидно, когда ожидания не совпадают с реальностью.",
+                normalization: "Такое чувство знакомо каждому, кто вкладывает душу в обучение.",
+                solution: "Давайте посмотрим, что мы можем сделать сейчас. Уточните, пожалуйста, чего именно вы ждали? Постараемся найти вариант, который вас устроит.",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            disappointed2: {
+                acceptance: "Очень жаль, что вы разочарованы. Я бы сам расстроился на вашем месте.",
+                normalization: "Разочарование — нормальная часть процесса.",
+                solution: "Давайте честно: что пошло не так, как вы хотели? Вместе подумаем, как исправить ситуацию.",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            boundary1: {
+                acceptance: "Я понимаю ваше желание помочь [близкому/родственнику] — это очень ценно.",
+                normalization: "И правила нашего клуба построены так, чтобы каждый участник мог разобраться в первую очередь со своей ситуацией.",
+                solution: "Поэтому я помогу вам с вашей картой/вашим вопросом. А чтобы помочь родным, лучше сначала освоить базу на себе.",
+                formula: "Принятие → Объяснение через «И» → Альтернатива"
+            },
+            boundary2: {
+                acceptance: "Я вижу, что вы хотите помочь близким, и это замечательно.",
+                normalization: "И именно поэтому мы сначала учим участников на себе — так надёжнее и безопаснее.",
+                solution: "Давайте сфокусируемся на вашей ситуации: [конкретный совет]. Когда разберётесь сами, сможете применять знания и для родных.",
+                formula: "Принятие → Объяснение через «И» → Решение"
+            },
+            universal: {
+                acceptance: "Я слышу, что вы расстроены / раздражены / устали.",
+                normalization: "Это совершенно нормально — в обучении бывают такие моменты.",
+                solution: "Давайте я помогу вам сделать первый шаг к решению. Напишите, с чего нам лучше начать?",
+                formula: "Принятие → Нормализация → Решение"
+            },
+            repeat: {
+                acceptance: "Вижу, что этот вопрос для вас всё ещё не до конца ясен.",
+                normalization: "Это нормально, иногда нужно услышать одно и то же разными словами.",
+                solution: "Давайте я переформулирую: [объяснение по-другому]. А если останется непонятное — спросите ещё, я не злюсь.",
+                formula: "Принятие → Нормализация → Решение (переформулировка)"
+            },
+            general: {
+                acceptance: "Я понимаю, что сейчас вам кажется, будто всё валится из рук.",
+                normalization: "Это бывает, даже у самых опытных участников.",
+                solution: "Давайте не будем пытаться объять всё сразу. Скажите, с какой именно задачи у вас началась трудность? Сделаем один маленький шаг — и станет легче.",
+                formula: "Принятие → Нормализация → Решение (шаг за шагом)"
+            }
+        };
+
+        let currentTab = 'templates';
+        let breathingInterval = null;
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Скрываем все контенты
+            document.getElementById('tab-content-templates').classList.add('hidden');
+            document.getElementById('tab-content-ai').classList.add('hidden');
+            document.getElementById('tab-content-selfcare').classList.add('hidden');
+            
+            // Убираем активность с табов
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            // Показываем нужный контент
+            document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            // Управление сайдбаром
+            if (tab === 'selfcare') {
+                document.getElementById('templatesSidebar').classList.add('hidden');
+                document.getElementById('selfcareSidebar').classList.remove('hidden');
+            } else {
+                document.getElementById('templatesSidebar').classList.remove('hidden');
+                document.getElementById('selfcareSidebar').classList.add('hidden');
+            }
+        }
+
+        function toggleCategory(header) {
+            const list = header.nextElementSibling;
+            header.classList.toggle('collapsed');
+            list.classList.toggle('open');
+        }
+
+        function useTemplate(templateId) {
+            const t = templates[templateId];
+            if (!t) return;
+            
+            document.getElementById('editAcceptance').value = t.acceptance;
+            document.getElementById('editNormalization').value = t.normalization;
+            document.getElementById('editSolution').value = t.solution;
+            
+            document.getElementById('formulaHint').style.display = 'block';
+            document.getElementById('formulaText').textContent = t.formula;
+            
+            // Скролл к конструктору
+            document.getElementById('editAcceptance').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyEditedTemplate() {
+            const parts = [
+                document.getElementById('editAcceptance').value,
+                document.getElementById('editNormalization').value,
+                document.getElementById('editSolution').value
+            ].filter(p => p.trim());
+            
+            if (parts.length === 0) {
+                alert('Заполните хотя бы одно поле');
+                return;
+            }
+            
+            const fullText = parts.join('\n\n') + '\n\nЕсли останутся вопросы — обязательно напишите! 🤗';
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                alert('✅ Ответ скопирован в буфер обмена!');
+            });
+        }
+
+        // Самопомощь функции
+        function quickTechnique(type) {
+            switch(type) {
+                case 'breathe':
+                    startBreathing();
+                    break;
+                case 'water':
+                    alert('💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд. Следите за дыханием.');
+                    break;
+                case 'fists':
+                    let msg = '✊ Сожмите кулаки сильно-сильно (счёт: раз, два, три, четыре, пять, шесть, семь) — и резко разожмите. Почувствуйте, как уходит напряжение.';
+                    alert(msg);
+                    break;
+                case 'step':
+                    alert('👣 Отойдите от экрана на 3 шага назад. Повернитесь спиной к нему. Сделайте 3 глубоких выдоха со звуком "Ха-а-а".');
+                    break;
+                case 'name':
+                    const emotion = prompt('Какую эмоцию вы сейчас чувствуете? (например: злюсь, раздражена, боюсь)');
+                    if (emotion) {
+                        alert(`📝 Вы сказали себе: "Я сейчас ${emotion}. Это моя эмоция, я её вижу. Я справлюсь."`);
+                    }
+                    break;
+                case 'jar':
+                    alert('🫙 Возьмите пластиковую банку (или подушку). Плотно прижмите горло к горлышку (или лицо к подушке). Крикните всё, что накипело — полностью, из живота. Банка заглушит звук, но вы выпустите пар.');
+                    break;
+            }
+        }
+
+        function toggleCheck(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('checked', checkbox.checked);
+            updateDiagnosis();
+        }
+
+        function updateDiagnosis() {
+            const checked = document.querySelectorAll('.checklist-item.checked').length;
+            const resultDiv = document.getElementById('diagnosisResult');
+            const textSpan = document.getElementById('diagnosisText');
+            
+            if (checked === 0) {
+                resultDiv.style.display = 'none';
+                return;
+            }
+            
+            resultDiv.style.display = 'block';
+            
+            // Простая логика диагностики
+            const anger = document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('шее') ||
+                         document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('дыхание');
+            const sadness = document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('горле') ||
+                           document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('плечи');
+            
+            if (anger) {
+                textSpan.textContent = 'У вас признаки гнева/раздражения. Используйте техники в красной панели «Экстренная разрядка»: дыхание, кулаки, холодная вода, 🫙 крик в банку.';
+            } else if (sadness) {
+                textSpan.textContent = 'У вас признаки печали. Разрешите себе поплакать, зевните с потягиванием, включите кран с водой.';
+            } else {
+                textSpan.textContent = 'Сделайте паузу 2 минуты. Выпейте воды. Отойдите от экрана.';
+            }
+        }
+
+        function updateSelfcare(emotion) {
+            const body = document.getElementById('resource-body');
+            const mind = document.getElementById('resource-mind');
+            const action = document.getElementById('resource-action');
+            
+            if (emotion === 'anger') {
+                body.textContent = 'холодная вода на запястья, сжать кулаки';
+                mind.textContent = '"Я сейчас злюсь, и это пройтёт"';
+                action.textContent = 'отойти на 3 шага от экрана';
+            } else if (emotion === 'sadness') {
+                body.textContent = 'тёплый плед, чай';
+                mind.textContent = '"Я разрешаю себе быть слабым сейчас"';
+                action.textContent = 'позвонить другу/коллеге';
+            } else {
+                body.textContent = 'тёплый плед, чай';
+                mind.textContent = '"Я сейчас большой/взрослый"';
+                action.textContent = 'открыть форточку';
+            }
+        }
+
+        function showTechnique(tech) {
+            const texts = {
+                water: '💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд. Почувствуйте, как нервы охлаждаются.',
+                fists: '✊ Сожмите кулаки сильно (1-2-3-4-5-6-7) и резко разожмите. Повторите 3 раза. Напряжение уходит через пальцы.',
+                step: '👣 Отойдите от стола. Сделайте 3 шага назад. Повернитесь спиной к экрану. 3 глубоких выдоха со звуком.',
+                cry: '😢 Если идут слёзы — разрешите им быть. Помните: "Слёзы разряжают горе". 30 секунд — и станет легче.',
+                wood: '🪓 Представьте, что рубите дрова. Энергичные движения руками вниз. 1 минута — выбросите агрессию.',
+                tear: '📄 Возьмите ненужную бумагу. Медленно рвите её на мелкие кусочки. Ощущайте, как разрушается напряжение.',
+                pushups: '💪 Опуститесь на пол. Сделайте 10 отжиманий (или от стены). Переключите энергию гнева в мышцы.',
+                moan: '📢 Закройте дверь. Произнесите громко: "Ой-йой-йой..." или "Ух-ху-ху...". Не сдерживайте звук.',
+                dish: '🍽️ Возьмите губку. Мойте посуду (или просто протирайте стол). Фокус на ощущениях — горе уходит через руки.',
+                // НОВЫЕ ТЕХНИКИ
+                jar: '🫙 Возьмите пластиковую банку (1-2 литра) или подушку.\n\n1. Плотно прижмите рот к горлышку банки (или лицо к подушке)\n2. Крикните изо всей силы — полностью, из живота, всё, что накипело\n3. Банка заглушит звук на 80%, но вы выпустите пар и разрядите грудную клетку\n\nЭто безопасно для соседей и голосовых связок.',
+                towel: '🧺 Возьмите мокрое полотенце (или смочите сухое).\n\n1. Сомните его в тугой комок\n2. Крутите, сжимайте, мяйте изо всех сил — как будто хотите выжать всю воду\n3. Делайте это энергично 2-3 минуты\n\nПочему работает: расходует силу мышц рук (гнев часто "застревает" в кулаках), безопасно для окружающих.',
+                ice: '🧊 Возьмите кубик льда (или замороженную лепёшку).\n\n1. Сожмите его в кулаке или приложите к запястью\n2. Держите, пока не почувствуете сильное жжение/холод (30-60 секунд)\n3. Переключите на другое запястье\n\nПочему работает: мгновенный шок для нервной системы переключает внимание с эмоции на физическое ощущение. Эффективно при панике и сильном раздражении.',
+                chew: '🍞 Возьмите сухарь, жвачку или яблоко.\n\n1. Жуйте интенсивно, активно, с силой\n2. Сконцентрируйтесь на ощущениях в челюсти\n3. Продолжайте 2-3 минуты\n\nПочему работает: гнев часто "застревает" в сжатой челюсти. Активное жевание снимает мышечный зажим и снижает уровень кортизола.'
+            };
+            
+            alert(texts[tech] || 'Техника выбрана');
+        }
+
+        function startBreathing() {
+            const visualizer = document.getElementById('breathingVisualizer');
+            const circle = document.getElementById('breathCircle');
+            const timer = document.getElementById('breathTimer');
+            
+            visualizer.classList.remove('hidden');
+            
+            let phase = 'inhale'; // inhale or exhale
+            let count = 5;
+            
+            const updateCircle = () => {
+                if (phase === 'inhale') {
+                    circle.textContent = 'Вдох';
+                    circle.classList.add('inhale');
+                    circle.classList.remove('exhale');
+                    timer.textContent = `Вдох: ${count}`;
+                } else {
+                    circle.textContent = 'Выдох';
+                    circle.classList.add('exhale');
+                    circle.classList.remove('inhale');
+                    timer.textContent = `Выдох: ${count}`;
+                }
+            };
+            
+            updateCircle();
+            
+            breathingInterval = setInterval(() => {
+                count--;
+                
+                if (count === 0) {
+                    if (phase === 'inhale') {
+                        phase = 'exhale';
+                        count = 8; // Выдох длиннее
+                    } else {
+                        phase = 'inhale';
+                        count = 5;
+                    }
+                }
+                
+                updateCircle();
+            }, 1000);
+        }
+
+        function stopBreathing() {
+            if (breathingInterval) {
+                clearInterval(breathingInterval);
+                breathingInterval = null;
+            }
+            document.getElementById('breathingVisualizer').classList.add('hidden');
+        }
+
+        // AI функции (упрощённые для примера)
+        function toggleProvider() {
+            const provider = document.getElementById('aiProvider').value;
+            const cloud = document.getElementById('cloudSettings');
+            const ollama = document.getElementById('ollamaSettings');
+            
+            if (provider === 'ollama') {
+                cloud.classList.add('hidden');
+                ollama.classList.remove('hidden');
+            } else {
+                cloud.classList.remove('hidden');
+                ollama.classList.add('hidden');
+            }
+        }
+
+        function generateAIResponse() {
+            const message = document.getElementById('aiStudentMessage').value;
+            if (!message.trim()) {
+                alert('Вставьте сообщение ученика');
+                return;
+            }
+            
+            // Здесь должна быть реальная интеграция с API
+            // Для демо показываем заглушку
+            document.getElementById('aiResults').classList.remove('hidden');
+            const container = document.getElementById('aiResponsesContainer');
+            
+            container.innerHTML = `
+                <div class="variant-card">
+                    <div class="variant-actions">
+                        <span class="badge" style="background: #d4edda; color: #155724;">Вариант 1</span>
+                    </div>
+                    <div class="variant-text">
+                        Я вижу, что вам сейчас сложно, и это понятно — такие ситуации выматывают. Многие участники проходят через подобное, вы не одиноки. Давайте разберёмся вместе: что именно вызвало трудность? Я помогу найти решение.
+                    </div>
+                    <div class="variant-actions">
+                        <button class="btn-small btn-copy" onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.textContent)">📋 Копировать</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            // Открываем первую категорию по умолчанию
+            document.querySelector('.category-header').click();
+        });
+    </script>
+</body>
+</html>

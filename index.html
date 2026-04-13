@@ -102,6 +102,7 @@
             gap: 8px;
         }
 
+        /* Экстренная панель - теперь обычный блок без sticky */
         .emergency-panel {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
@@ -566,16 +567,11 @@
             }
             
             .sidebar { 
-                max-height: 400px; 
+                max-height: none !important; /* Убираем ограничение! */
                 border-right: none; 
                 border-bottom: 2px solid #e9ecef; 
-                overflow-y: auto;
-                order: -1;
-            }
-            
-            .main-area {
-                max-height: none;
-                overflow-y: visible;
+                overflow-y: visible; /* Позволяем растягиваться */
+                padding: 20px;
             }
         }
 
@@ -615,18 +611,10 @@
                 max-width: none;
             }
             
+            /* Убрали sticky для мобильных */
             .emergency-panel {
-                position: sticky;
-                top: 0;
-                z-index: 100;
-                margin: -10px -10px 15px -10px;
-                border-radius: 0;
-                padding: 15px;
-            }
-            
-            .emergency-btn {
-                padding: 14px;
-                margin-bottom: 6px;
+                margin: 0 0 20px 0;
+                border-radius: 12px;
             }
             
             .panel {
@@ -636,7 +624,6 @@
             
             .sidebar {
                 padding: 15px;
-                max-height: 350px;
             }
             
             .main-area {
@@ -666,7 +653,7 @@
             }
             
             .template-item {
-                padding: 12px;
+                padding: 14px;
             }
             
             .selfcare-grid {
@@ -689,7 +676,7 @@
             }
             
             .resource-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
             }
         }
 
@@ -701,10 +688,6 @@
             .tab {
                 font-size: 0.8em;
                 padding: 8px 10px;
-            }
-            
-            .resource-grid {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -724,21 +707,7 @@
 
         <div class="content">
             <div class="sidebar">
-                <!-- Экстренная панель -->
-                <div class="emergency-panel">
-                    <div class="emergency-title">🆘 Экстренная пауза</div>
-                    <div style="font-size: 0.9em; margin-bottom: 12px; opacity: 0.95;">
-                        Если чувствуете, что «закипаете»:
-                    </div>
-                    <button class="emergency-btn" onclick="quickTechnique('breathe')">🫁 Дыхание 5/8 (инструкция)</button>
-                    <button class="emergency-btn" onclick="quickTechnique('water')">💧 Холодная вода</button>
-                    <button class="emergency-btn" onclick="quickTechnique('fists')">✊ Сжать кулаки</button>
-                    <button class="emergency-btn" onclick="quickTechnique('step')">👣 Отойти 3 шага</button>
-                    <button class="emergency-btn calming" onclick="quickTechnique('name')">📝 Назвать эмоцию</button>
-                    <button class="emergency-btn" onclick="quickTechnique('jar')">🫙 Крик в банку</button>
-                </div>
-
-                <!-- Библиотека шаблонов (видна всегда по умолчанию) -->
+                <!-- Теперь здесь ТОЛЬКО библиотека шаблонов (без экстренной паузы!) -->
                 <div id="templatesSidebar">
                     <div class="sidebar-title">📚 Библиотека ответов</div>
                     
@@ -771,7 +740,7 @@
                             </div>
                             <div class="template-item" onclick="useTemplate('frustrated2')">
                                 <div class="label">Готовый</div>
-                                <div class="preview">Понимаю, что это бесит. Честно, сам бы расстроился на вашем месте...</div>
+                                <div class="preview">Понимаю, что это бесит. Честно, сам бы расстроился...</div>
                             </div>
                         </div>
                     </div>
@@ -849,8 +818,22 @@
                     </div>
                 </div>
 
-                <!-- Самопомощь (скрыта по умолчанию) -->
+                <!-- А здесь (во вкладке Самопомощь) - экстренная панель + ресурсы -->
                 <div id="selfcareSidebar" class="hidden">
+                    <!-- Экстренная пауза ТЕПЕРЬ ТОЛЬКО здесь! -->
+                    <div class="emergency-panel">
+                        <div class="emergency-title">🆘 Экстренная пауза</div>
+                        <div style="font-size: 0.9em; margin-bottom: 12px; opacity: 0.95;">
+                            Если чувствуете, что «закипаете» или накрывает:
+                        </div>
+                        <button class="emergency-btn" onclick="quickTechnique('breathe')">🫁 Дыхание 5/8 (инструкция)</button>
+                        <button class="emergency-btn" onclick="quickTechnique('water')">💧 Холодная вода на запястья</button>
+                        <button class="emergency-btn" onclick="quickTechnique('fists')">✊ Сжать-разжать кулаки 7 раз</button>
+                        <button class="emergency-btn" onclick="quickTechnique('step')">👣 Отойти от экрана на 3 шага</button>
+                        <button class="emergency-btn calming" onclick="quickTechnique('name')">📝 Назвать эмоцию вслух</button>
+                        <button class="emergency-btn" onclick="quickTechnique('jar')">🫙 Крик в банку (без звука)</button>
+                    </div>
+
                     <div class="sidebar-title">🧘 Ресурсы куратора</div>
                     <div class="template-category">
                         <div class="category-header selfcare" onclick="toggleCategory(this)">
@@ -998,8 +981,7 @@
                         <div class="panel selfcare-card urgent">
                             <div class="panel-title">⚡ Экстренная разрядка (1-2 мин)</div>
                             
-                            <!-- Здесь работает визуализатор -->
-                            <button class="technique-btn" onclick="startBreathing()">🫁 Дыхание 5/8 (с визуализацией)</button>
+                            <button class="technique-btn" onclick="startBreathing()">🫁 Дыхание 5/8 (с анимацией)</button>
                             <div id="breathingVisualizer" class="hidden" style="text-align: center; margin: 15px 0;">
                                 <div class="breathing-circle" id="breathCircle">Вдох</div>
                                 <div class="timer-display" id="breathTimer">Готов?</div>
@@ -1007,8 +989,8 @@
                             </div>
 
                             <button class="technique-btn" onclick="showTechnique('water')">💧 Холодная вода на запястья</button>
-                            <button class="technique-btn" onclick="showTechnique('fists')">✊ Сжать-разжать кулаки</button>
-                            <button class="technique-btn" onclick="showTechnique('step')">👣 Отойти на 3 шага</button>
+                            <button class="technique-btn" onclick="showTechnique('fists')">✊ Сжать-разжать кулаки (7 раз)</button>
+                            <button class="technique-btn" onclick="showTechnique('step')">👣 Отойти на 3 шага от экрана</button>
                             <button class="technique-btn" onclick="showTechnique('cry')">😢 Разрешить себе всплакнуть</button>
                         </div>
 
@@ -1156,10 +1138,8 @@
 
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', () => {
-            // Явно устанавливаем начальное состояние
             switchTab('templates');
             
-            // Открываем первую категорию шаблонов
             const firstHeader = document.querySelector('#templatesSidebar .category-header');
             if (firstHeader) {
                 firstHeader.classList.remove('collapsed');
@@ -1170,19 +1150,15 @@
         function switchTab(tab) {
             currentTab = tab;
             
-            // Скрываем все контенты
             document.getElementById('tab-content-templates').classList.add('hidden');
             document.getElementById('tab-content-ai').classList.add('hidden');
             document.getElementById('tab-content-selfcare').classList.add('hidden');
             
-            // Убираем активность с табов
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             
-            // Показываем нужный контент
             document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-${tab}`).classList.add('active');
             
-            // Управление сайдбарами
             if (tab === 'selfcare') {
                 document.getElementById('templatesSidebar').classList.add('hidden');
                 document.getElementById('selfcareSidebar').classList.remove('hidden');
@@ -1209,7 +1185,6 @@
             document.getElementById('formulaHint').style.display = 'block';
             document.getElementById('formulaText').textContent = t.formula;
             
-            // Прокрутка к конструктору на мобильных
             document.getElementById('editAcceptance').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
@@ -1232,30 +1207,29 @@
             });
         }
 
-        // Экстренные техники (исправлено!)
+        // Экстренные техники
         function quickTechnique(type) {
             switch(type) {
                 case 'breathe':
-                    // Теперь показывает инструкцию вместо попытки запустить визуализатор из другой вкладки
-                    alert('🫁 Дыхание 5/8:\n\n1. Вдохните носом на 5 секунд (считайте: 1-2-3-4-5)\n2. Выдохните ртом на 8 секунд (считайте: 1-2-3-4-5-6-7-8)\n3. Повторите 3-5 раз\n\nДлинный выдох активирует парасимпатическую нервную систему и снижает тревогу.\n\n💡 Полный визуализатор с анимацией доступен во вкладке «Самопомощь»');
+                    alert('🫁 Дыхание 5/8:\n\n1. Вдохните носом на 5 секунд\n2. Выдохните ртом на 8 секунд\n3. Повторите 3-5 раз\n\nДлинный выдох активирует парасимпатическую нервную систему.\n\n💡 Полная версия с анимацией во вкладке «Самопомощь»');
                     break;
                 case 'water':
-                    alert('💧 Холодная вода на запястья:\n\nПодойдите к раковине, включите холодную воду и держите запястья под струёй 30-60 секунд. Это активирует нырятельный рефлекс и снижает пульс.');
+                    alert('💧 Холодная вода на запястья:\n\nПодойдите к раковине, включите холодную воду и держите запястья под струёй 30-60 секунд.');
                     break;
                 case 'fists':
-                    alert('✊ Сжать-разжать кулаки:\n\nСожмите кулаки сильно-сильно (счёт: раз, два, три, четыре, пять, шесть, семь) — и резко разожмите. Повторите 3-5 раз. Напряжение уходит через пальцы.');
+                    alert('✊ Сжать-разжать кулаки:\n\nСожмите кулаки сильно (счёт: 1-2-3-4-5-6-7) — и резко разожмите. Повторите 3-5 раз.');
                     break;
                 case 'step':
-                    alert('👣 Отойти на 3 шага:\n\nОтойдите от экрана на 3 шага назад. Повернитесь спиной к компьютеру. Сделайте 3 глубоких выдоха со звуком «Ха-а-а». Физическое отдаление снижает эмоциональную реактивность.');
+                    alert('👣 Отойти на 3 шага:\n\nОтойдите от экрана на 3 шага назад. Повернитесь спиной. Сделайте 3 глубоких выдоха со звуком «Ха-а-а».');
                     break;
                 case 'name':
-                    const emotion = prompt('Какую эмоцию вы сейчас чувствуете? (например: злюсь, раздражена, боюсь, устала)');
+                    const emotion = prompt('Какую эмоцию вы сейчас чувствуете?');
                     if (emotion) {
-                        alert(`📝 Вы сказали себе:\n\n«Я сейчас ${emotion}. Это моя эмоция, я её вижу. Я справлюсь. Я взрослый, я могу дать себе уверенность.»\n\nНазывание эмоции разряжает её на 50%.`);
+                        alert(`📝 «Я сейчас ${emotion}. Это моя эмоция, я её вижу. Я справлюсь.»`);
                     }
                     break;
                 case 'jar':
-                    alert('🫙 Крик в банку (безопасный способ):\n\n1. Возьмите пластиковую банку (1-2 литра) или подушку\n2. Плотно прижмите рот к горлышку банки (или лицо к подушке)\n3. Крикните изо всей силы — полностью, из живота, всё что накипело\n\nБанка заглушит звук на 80%, но вы выпустите пар и разрядите грудную клетку. Это безопасно для соседей и голосовых связок.');
+                    alert('🫙 Крик в банку:\n\n1. Возьмите пластиковую банку (1-2 литра) или подушку\n2. Плотно прижмите рот к горлышку\n3. Крикните изо всей силы\n\nБанка заглушит звук на 80%, но вы выпустите пар.');
                     break;
             }
         }
@@ -1283,40 +1257,38 @@
             const sadness = document.querySelector('.checklist-item.checked')?.textContent.includes('горле');
             
             if (anger) {
-                textSpan.textContent = 'У вас признаки гнева/раздражения. Используйте: дыхание, кулаки, 🫙 крик в банку, холодная вода.';
+                textSpan.textContent = 'У вас признаки гнева. Используйте: дыхание, кулаки, 🫙 крик в банку.';
             } else if (sadness) {
-                textSpan.textContent = 'У вас признаки печали. Разрешите себе поплакать, зевните с потягиванием, обнимите себя.';
+                textSpan.textContent = 'У вас признаки печали. Разрешите себе поплакать, обнимите себя.';
             } else {
-                textSpan.textContent = 'Сделайте паузу 2 минуты. Выпейте воды. Отойдите от экрана.';
+                textSpan.textContent = 'Сделайте паузу 2 минуты. Выпейте воды.';
             }
         }
 
         function updateSelfcare(emotion) {
-            // Заглушка для демо
-            console.log('Selected emotion:', emotion);
+            console.log('Emotion:', emotion);
         }
 
         function showTechnique(tech) {
             const texts = {
-                water: '💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд. Следите за дыханием.',
-                fists: '✊ Сожмите кулаки сильно (1-2-3-4-5-6-7) и резко разожмите. Повторите 3 раза. Напряжение уходит через пальцы.',
-                step: '👣 Отойдите от стола. Сделайте 3 шага назад. Повернитесь спиной к экрану. 3 глубоких выдоха со звуком.',
-                cry: '😢 Если идут слёзы — разрешите им быть. Помните: "Слёзы разряжают горе". 30 секунд — и станет легче.',
-                jar: '🫙 Возьмите пластиковую банку (1-2 литра) или подушку.\n\n1. Плотно прижмите рот к горлышку банки (или лицо к подушке)\n2. Крикните изо всей силы — полностью, из живота\n3. Банка заглушит звук на 80%, но вы выпустите пар\n\nЭто безопасно для соседей и голосовых связок.',
-                towel: '🧺 Возьмите мокрое полотенце.\n\n1. Сомните его в тугой комок\n2. Крутите, сжимайте, мяйте изо всех сил — как будто хотите выжать всю воду\n3. Делайте это энергично 2-3 минуты\n\nПочему работает: расходует силу мышц рук (гнев часто "застревает" в кулаках), безопасно для окружаущих.',
-                ice: '🧊 Возьмите кубик льда.\n\n1. Сожмите его в кулаке или приложите к запястью\n2. Держите, пока не почувствуете сильное жжение/холод (30-60 сек)\n3. Переключите на другое запястье\n\nМгновенный шок для нервной системы переключает внимание с эмоции на физическое ощущение. Эффективно при панике.',
-                chew: '🍞 Возьмите сухарь, жвачку или яблоко.\n\n1. Жуйте интенсивно, активно, с силой\n2. Сконцентрируйтесь на ощущениях в челюсти\n3. Продолжайте 2-3 минуты\n\nГнев часто "застревает" в сжатой челюсти. Активное жевание снимает мышечный зажим.',
-                wood: '🪓 Представьте, что рубите дрова. Энергичные движения руками вниз. 1 минута — выбросите агрессию.',
-                tear: '📄 Возьмите ненужную бумагу. Медленно рвите её на мелкие кусочки. Ощущайте, как разрушается напряжение.',
-                pushups: '💪 Опуститесь на пол. Сделайте 10 отжиманий (или от стены). Переключите энергию гнева в мышцы.',
-                moan: '📢 Закройте дверь. Произнесите громко: "Ой-йой-йой..." или "Ух-ху-ху...". Не сдерживайте звук.',
-                dish: '🍽️ Возьмите губку. Мойте посуду (или протирайте стол). Фокус на ощущениях — горе уходит через руки.'
+                water: '💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд.',
+                fists: '✊ Сожмите кулаки сильно (1-2-3-4-5-6-7) и резко разожмите. Повторите 3 раза.',
+                step: '👣 Отойдите от стола. Сделайте 3 шага назад. Повернитесь спиной к экрану.',
+                cry: '😢 Если идут слёзы — разрешите им быть. Помните: "Слёзы разряжают горе".',
+                jar: '🫙 Возьмите пластиковую банку (1-2 литра). Плотно прижмите рот к горлышку. Крикните изо всей силы. Банка заглушит звук, но вы выпустите пар.',
+                towel: '🧺 Возьмите мокрое полотенце. Сомните в тугой комок и мяйте изо всех сил 2-3 минуты.',
+                ice: '🧊 Возьмите кубик льда. Сожмите в кулаке до ощущения жжения (30-60 сек). Переключает нервную систему.',
+                chew: '🍞 Возьмите сухарь или яблоко. Жуйте интенсивно 2-3 минуты. Снимает зажим челюсти.',
+                wood: '🪓 Представьте, что рубите дрова. Энергичные движения руками вниз. 1 минута.',
+                tear: '📄 Возьмите ненужную бумагу. Медленно рвите на мелкие кусочки.',
+                pushups: '💪 Сделайте 10 отжиманий (или от стены). Переключите энергию в мышцы.',
+                moan: '📢 Закройте дверь. Произнесите громко: "Ой-йой-йой..." Не сдерживайте звук.',
+                dish: '🍽️ Возьмите губку. Мойте посуду. Фокус на ощущениях.'
             };
             
             alert(texts[tech] || 'Техника выбрана');
         }
 
-        // Визуализатор дыхания (только во вкладке Самопомощь)
         function startBreathing() {
             const visualizer = document.getElementById('breathingVisualizer');
             const circle = document.getElementById('breathCircle');
@@ -1403,7 +1375,7 @@
             container.innerHTML = `
                 <div class="variant-card">
                     <div class="variant-actions">
-                        <span class="badge badge-universal" style="background: #d4edda; color: #155724;">AI Вариант</span>
+                        <span class="badge" style="background: #d4edda; color: #155724;">AI Вариант</span>
                     </div>
                     <div class="variant-text">
                         Я вижу, что вам сейчас сложно, и это понятно — такие ситуации выматывают. Многие участники проходят через подобное, вы не одиноки. Давайте разберёмся вместе: что именно вызвало трудность? Я помогу найти решение.
@@ -1417,3 +1389,4 @@
     </script>
 </body>
 </html>
+```

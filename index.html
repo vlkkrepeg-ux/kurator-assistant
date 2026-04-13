@@ -1,19 +1,23 @@
+Вот **полный, готовый HTML-файл** с адаптивностью для мобильных. Просто скопируйте ВЕСЬ этот код, вставьте в файл `index.html` и загрузите на GitHub Pages:
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Куратор | Шаблоны ответов + Психогигиена</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
             color: #333;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -33,8 +37,16 @@
             position: relative;
         }
 
-        .header h1 { font-size: 2.2em; margin-bottom: 10px; }
-        .header p { opacity: 0.9; font-size: 1.1em; }
+        .header h1 { 
+            font-size: 2.2em; 
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p { 
+            opacity: 0.9; 
+            font-size: 1.1em;
+        }
 
         .tabs {
             display: flex;
@@ -57,6 +69,9 @@
             transition: all 0.3s;
             font-weight: 600;
             font-size: 0.95em;
+            flex: 1;
+            min-width: 120px;
+            max-width: 200px;
         }
 
         .tab.active {
@@ -71,11 +86,7 @@
             min-height: 70vh;
         }
 
-        @media (max-width: 968px) {
-            .content { grid-template-columns: 1fr; }
-        }
-
-        /* Sidebar с шаблонами и самопомощью */
+        /* Sidebar */
         .sidebar {
             background: #f8f9fa;
             border-right: 2px solid #e9ecef;
@@ -94,7 +105,6 @@
             gap: 8px;
         }
 
-        /* Экстренная панель куратора */
         .emergency-panel {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
@@ -115,7 +125,7 @@
 
         .emergency-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 8px;
             border: 2px solid rgba(255,255,255,0.3);
             background: rgba(255,255,255,0.15);
@@ -126,6 +136,8 @@
             transition: all 0.2s;
             font-size: 0.9em;
             text-align: left;
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
         .emergency-btn:hover {
@@ -161,6 +173,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #e9ecef;
+            user-select: none;
         }
 
         .category-header.selfcare {
@@ -188,7 +201,7 @@
         }
 
         .template-item {
-            padding: 12px;
+            padding: 15px;
             margin-bottom: 8px;
             background: #f8f9fa;
             border-radius: 8px;
@@ -196,6 +209,8 @@
             font-size: 0.9em;
             border-left: 3px solid #667eea;
             transition: all 0.2s;
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
         .template-item:hover {
@@ -220,7 +235,21 @@
             overflow: hidden;
         }
 
-        /* Main area */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-confused { background: #fff3cd; color: #856404; }
+        .badge-frustrated { background: #f8d7da; color: #721c24; }
+        .badge-angry { background: #f5c6cb; color: #721c24; }
+        .badge-disappointed { background: #d1ecf1; color: #0c5460; }
+        .badge-universal { background: #d4edda; color: #155724; }
+
         .main-area {
             padding: 30px;
             display: flex;
@@ -247,31 +276,36 @@
             gap: 10px;
         }
 
-        textarea {
+        textarea, input[type="text"], input[type="password"], select {
             width: 100%;
-            min-height: 120px;
             padding: 15px;
             border: 2px solid #ddd;
             border-radius: 10px;
-            font-size: 15px;
-            resize: vertical;
+            font-size: 16px;
             font-family: inherit;
             transition: all 0.3s;
+            -webkit-appearance: none;
         }
 
-        textarea:focus {
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        /* AI Settings */
         .ai-settings {
             background: #e7f3ff;
             border: 2px solid #b3d9ff;
         }
 
-        .setting-row { margin-bottom: 15px; }
+        .setting-row { 
+            margin-bottom: 15px; 
+        }
         
         .setting-label {
             display: block;
@@ -279,14 +313,6 @@
             margin-bottom: 5px;
             color: #004085;
             font-size: 0.9em;
-        }
-
-        select, input[type="password"], input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #90caf9;
-            border-radius: 8px;
-            font-size: 14px;
         }
 
         .btn-generate {
@@ -305,6 +331,8 @@
             justify-content: center;
             gap: 10px;
             margin-top: 10px;
+            touch-action: manipulation;
+            min-height: 50px;
         }
 
         .btn-generate:hover {
@@ -318,7 +346,42 @@
             transform: none;
         }
 
-        /* Selfcare tab specific styles */
+        .btn-small {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            min-height: 36px;
+        }
+
+        .btn-copy { 
+            background: #28a745; 
+            color: white; 
+        }
+        
+        .btn-use { 
+            background: #667eea; 
+            color: white; 
+        }
+
+        .formula-hint {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+            color: #856404;
+        }
+
+        .hidden { 
+            display: none !important; 
+        }
+
         .selfcare-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -353,48 +416,10 @@
             background: #f3fcf5;
         }
 
-        .card-title {
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1.1em;
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: start;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: rgba(255,255,255,0.7);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .checklist-item:hover {
-            background: white;
-            transform: translateX(3px);
-        }
-
-        .checklist-item input[type="checkbox"] {
-            margin-top: 3px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .checklist-item.checked {
-            opacity: 0.6;
-            text-decoration: line-through;
-        }
-
         .technique-btn {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 8px;
             border: 2px solid #e9ecef;
             background: white;
@@ -403,8 +428,8 @@
             text-align: left;
             transition: all 0.2s;
             font-size: 0.95em;
-            position: relative;
-            overflow: hidden;
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
         .technique-btn:hover {
@@ -413,28 +438,34 @@
             transform: translateX(5px);
         }
 
-        .technique-btn::before {
-            content: '▶';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: opacity 0.2s;
-            color: #667eea;
+        .checklist-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 12px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            min-height: 44px;
         }
 
-        .technique-btn:hover::before {
-            opacity: 1;
+        .checklist-item:hover {
+            background: white;
         }
 
-        .timer-display {
-            font-size: 2em;
-            font-weight: bold;
-            color: #667eea;
-            text-align: center;
-            margin: 20px 0;
-            font-family: monospace;
+        .checklist-item input[type="checkbox"] {
+            margin-top: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checklist-item.checked {
+            opacity: 0.6;
+            text-decoration: line-through;
         }
 
         .breathing-circle {
@@ -450,101 +481,19 @@
             font-weight: bold;
             transition: transform 4s ease-in-out;
             cursor: pointer;
+            font-size: 1.2em;
         }
 
         .breathing-circle.inhale { transform: scale(1.3); }
         .breathing-circle.exhale { transform: scale(1); }
 
-        .state-indicator {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .state-normal { background: #d4edda; color: #155724; }
-        .state-warning { background: #fff3cd; color: #856404; }
-        .state-danger { background: #f8d7da; color: #721c24; }
-
-        .results-area {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .variant-card {
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            padding: 20px;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .variant-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .variant-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .btn-small {
-            padding: 6px 16px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.2s;
-        }
-
-        .btn-copy { background: #28a745; color: white; }
-        .btn-use { background: #667eea; color: white; }
-
-        .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .hidden { display: none !important; }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .formula-hint {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.9em;
+        .timer-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+            font-family: monospace;
         }
 
         table.reference-table {
@@ -591,32 +540,217 @@
             text-transform: uppercase;
         }
 
-        .sound-wave {
-            height: 30px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            margin: 10px 0;
-            opacity: 0;
-            transform: scaleX(0);
+        .variant-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
             transition: all 0.3s;
         }
 
-        .sound-wave.active {
-            opacity: 1;
-            transform: scaleX(1);
-            animation: pulse 0.5s infinite;
+        .variant-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+        .variant-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ==================== */
+        /* 📱 АДАПТИВНОСТЬ      */
+        /* ==================== */
+
+        @media (max-width: 968px) {
+            .content { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .sidebar { 
+                max-height: 350px; 
+                border-right: none; 
+                border-bottom: 2px solid #e9ecef; 
+                overflow-y: auto;
+                order: -1;
+            }
+            
+            .main-area {
+                max-height: none;
+                overflow-y: visible;
+            }
         }
 
         @media (max-width: 768px) {
-            .content { grid-template-columns: 1fr; }
-            .sidebar { max-height: none; border-right: none; border-bottom: 2px solid #e9ecef; }
-            .emergency-panel { position: relative; }
-            .selfcare-grid { grid-template-columns: 1fr; }
+            body {
+                padding: 10px;
+                font-size: 15px;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 { 
+                font-size: 1.5em; 
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .tabs {
+                gap: 5px;
+                padding: 3px;
+            }
+            
+            .tab {
+                padding: 10px 12px;
+                font-size: 0.85em;
+                flex: 1;
+                min-width: 100px;
+                max-width: none;
+            }
+            
+            .emergency-panel {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                margin: -10px -10px 15px -10px;
+                border-radius: 0;
+                padding: 15px;
+            }
+            
+            .emergency-btn {
+                padding: 14px;
+                margin-bottom: 6px;
+            }
+            
+            .panel {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .sidebar {
+                padding: 15px;
+                max-height: 300px;
+            }
+            
+            .main-area {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            textarea, input, select {
+                padding: 12px;
+                font-size: 16px !important; /* Предотвращает zoom на iOS */
+                min-height: 44px;
+            }
+            
+            textarea {
+                min-height: 100px;
+            }
+            
+            .btn-generate {
+                min-height: 50px;
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .technique-btn {
+                padding: 14px;
+                margin-bottom: 6px;
+            }
+            
+            .template-item {
+                padding: 12px;
+            }
+            
+            .selfcare-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            table.reference-table {
+                font-size: 0.85em;
+            }
+            
+            table.reference-table th,
+            table.reference-table td {
+                padding: 8px;
+            }
+            
+            .breathing-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3em;
+            }
+            
+            .tab {
+                font-size: 0.8em;
+                padding: 8px 10px;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .panel-title {
+                font-size: 1.1em;
+            }
+            
+            .emergency-title {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .sidebar {
+                max-height: 150px;
+            }
+            
+            .emergency-panel {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -624,45 +758,41 @@
     <div class="container">
         <div class="header">
             <h1>🤖 AI Куратор + 🧘 Забота о себе</h1>
-            <p>Шаблоны ответов по формуле эмпатии + Психогигиена для куратора</p>
+            <p>Шаблоны ответов по формуле эмпатии + Психогигиена</p>
             
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('templates')" id="tab-templates">📋 Шаблоны ответов</button>
-                <button class="tab" onclick="switchTab('ai')" id="tab-ai">🤖 AI Генерация</button>
+                <button class="tab active" onclick="switchTab('templates')" id="tab-templates">📋 Шаблоны</button>
+                <button class="tab" onclick="switchTab('ai')" id="tab-ai">🤖 AI</button>
                 <button class="tab" onclick="switchTab('selfcare')" id="tab-selfcare">🧘 Самопомощь</button>
             </div>
         </div>
 
         <div class="content">
-            <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Экстренная панель для куратора (видна всегда) -->
                 <div class="emergency-panel">
                     <div class="emergency-title">🆘 Экстренная пауза</div>
                     <div style="font-size: 0.9em; margin-bottom: 12px; opacity: 0.95;">
-                        Если чувствуете, что «закипаете» или накрывает:
+                        Если чувствуете, что «закипаете»:
                     </div>
-                    <button class="emergency-btn" onclick="quickTechnique('breathe')">🫁 Дыхание 5/8 (1 мин)</button>
-                    <button class="emergency-btn" onclick="quickTechnique('water')">💧 Холодная вода на запястья</button>
-                    <button class="emergency-btn" onclick="quickTechnique('fists')">✊ Сжать-разжать кулаки 7 раз</button>
-                    <button class="emergency-btn calming" onclick="quickTechnique('step')">👣 Отойти от экрана на 3 шага</button>
-                    <button class="emergency-btn calming" onclick="quickTechnique('name')">📝 Назвать эмоцию вслух</button>
-                    <button class="emergency-btn" onclick="quickTechnique('jar')" style="background: rgba(255,255,255,0.25);">🫙 Крик в банку</button>
+                    <button class="emergency-btn" onclick="quickTechnique('breathe')">🫁 Дыхание 5/8</button>
+                    <button class="emergency-btn" onclick="quickTechnique('water')">💧 Холодная вода</button>
+                    <button class="emergency-btn" onclick="quickTechnique('fists')">✊ Сжать кулаки</button>
+                    <button class="emergency-btn" onclick="quickTechnique('step')">👣 Отойти 3 шага</button>
+                    <button class="emergency-btn calming" onclick="quickTechnique('name')">📝 Назвать эмоцию</button>
+                    <button class="emergency-btn" onclick="quickTechnique('jar')">🫙 Крик в банку</button>
                 </div>
 
-                <!-- Библиотека шаблонов -->
                 <div id="templatesSidebar">
                     <div class="sidebar-title">📚 Библиотека ответов</div>
                     
-                    <!-- Категории шаблонов -->
                     <div class="template-category">
                         <div class="category-header" onclick="toggleCategory(this)">
                             <span>😕 Растерянность</span>
-                            <span class="badge" style="background: #fff3cd; color: #856404;">не понимаю</span>
+                            <span class="badge badge-confused">не понимаю</span>
                         </div>
                         <div class="template-list">
                             <div class="template-item" onclick="useTemplate('confused1')">
-                                <div class="label">Полный шаблон</div>
+                                <div class="label">Шаблон</div>
                                 <div class="preview">Я понимаю, что сейчас это вызывает сложности...</div>
                             </div>
                             <div class="template-item" onclick="useTemplate('confused2')">
@@ -675,7 +805,7 @@
                     <div class="template-category">
                         <div class="category-header" onclick="toggleCategory(this)">
                             <span>😤 Раздражение</span>
-                            <span class="badge" style="background: #f8d7da; color: #721c24;">капслок</span>
+                            <span class="badge badge-frustrated">капслок</span>
                         </div>
                         <div class="template-list">
                             <div class="template-item" onclick="useTemplate('frustrated1')">
@@ -692,7 +822,7 @@
                     <div class="template-category">
                         <div class="category-header" onclick="toggleCategory(this)">
                             <span>😡 Гнев</span>
-                            <span class="badge" style="background: #f5c6cb; color: #721c24;">осторожно</span>
+                            <span class="badge badge-angry">осторожно</span>
                         </div>
                         <div class="template-list">
                             <div class="template-item" onclick="useTemplate('angry1')">
@@ -709,7 +839,7 @@
                     <div class="template-category">
                         <div class="category-header" onclick="toggleCategory(this)">
                             <span>😔 Обида</span>
-                            <span class="badge" style="background: #d1ecf1; color: #0c5460;">разочарование</span>
+                            <span class="badge badge-disappointed">разочарование</span>
                         </div>
                         <div class="template-list">
                             <div class="template-item" onclick="useTemplate('disappointed1')">
@@ -726,7 +856,7 @@
                     <div class="template-category">
                         <div class="category-header" onclick="toggleCategory(this)">
                             <span>🛡️ Границы</span>
-                            <span class="badge" style="background: #d4edda; color: #155724;">техника «И»</span>
+                            <span class="badge badge-universal">техника «И»</span>
                         </div>
                         <div class="template-list">
                             <div class="template-item" onclick="useTemplate('boundary1')">
@@ -743,7 +873,7 @@
                     <div class="template-category">
                         <div class="category-header" onclick="toggleCategory(this)">
                             <span>🔁 Универсальные</span>
-                            <span class="badge" style="background: #e2e3e5; color: #383d41;">любой случай</span>
+                            <span class="badge badge-universal">любой случай</span>
                         </div>
                         <div class="template-list">
                             <div class="template-item" onclick="useTemplate('universal')">
@@ -762,7 +892,6 @@
                     </div>
                 </div>
 
-                <!-- Самопомощь (показывается в режиме selfcare) -->
                 <div id="selfcareSidebar" class="hidden">
                     <div class="sidebar-title">🧘 Ресурсы</div>
                     <div class="template-category">
@@ -773,34 +902,15 @@
                             <div style="padding: 10px; font-size: 0.9em; color: #666;">
                                 <strong>Сейчас я чувствую:</strong>
                                 <div style="margin-top: 8px;">
-                                    <label style="display: block; margin-bottom: 5px; cursor: pointer;">
+                                    <label style="display: block; margin-bottom: 5px;">
                                         <input type="radio" name="current-emotion" value="anger" onchange="updateSelfcare('anger')"> Раздражение/гнев
                                     </label>
-                                    <label style="display: block; margin-bottom: 5px; cursor: pointer;">
+                                    <label style="display: block; margin-bottom: 5px;">
                                         <input type="radio" name="current-emotion" value="sadness" onchange="updateSelfcare('sadness')"> Печаль/усталость
                                     </label>
-                                    <label style="display: block; cursor: pointer;">
+                                    <label style="display: block;">
                                         <input type="radio" name="current-emotion" value="normal" onchange="updateSelfcare('normal')" checked> В норме
                                     </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="template-category">
-                        <div class="category-header selfcare" onclick="toggleCategory(this)">
-                            <span>Моя копилка</span>
-                        </div>
-                        <div class="template-list">
-                            <div style="padding: 10px; font-size: 0.85em;">
-                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 6px;">
-                                    <strong>Тело:</strong> <span id="resource-body">тёплый плед, чай</span>
-                                </div>
-                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 6px;">
-                                    <strong>Мысль:</strong> <span id="resource-mind">"Я могу дать себе уверенность"</span>
-                                </div>
-                                <div style="padding: 8px; background: white; border-radius: 6px;">
-                                    <strong>Действие:</strong> <span id="resource-action">открыть форточку</span>
                                 </div>
                             </div>
                         </div>
@@ -808,14 +918,11 @@
                 </div>
             </div>
 
-            <!-- Main Area -->
             <div class="main-area">
-                <!-- Вкладка Шаблонов -->
                 <div id="tab-content-templates">
                     <div class="panel">
                         <div class="panel-title">📨 Сообщение ученика</div>
                         <textarea id="studentMessage" placeholder="Вставьте сюда сообщение ученика..."></textarea>
-                        
                         <div class="formula-hint" id="formulaHint" style="display: none;">
                             <strong>💡 Формула:</strong> <span id="formulaText"></span>
                         </div>
@@ -825,15 +932,15 @@
                         <div class="panel-title">✏️ Конструктор ответа</div>
                         <div style="display: grid; gap: 15px;">
                             <div>
-                                <label style="font-weight: 600; color: #667eea; font-size: 0.9em;">1. Принятие (эмоция услышана):</label>
+                                <label style="font-weight: 600; color: #667eea; font-size: 0.9em;">1. Принятие:</label>
                                 <textarea id="editAcceptance" class="edit-textarea" placeholder="Я понимаю..." style="min-height: 60px; margin-top: 5px;"></textarea>
                             </div>
                             <div>
-                                <label style="font-weight: 600; color: #28a745; font-size: 0.9em;">2. Нормализация (он не один):</label>
+                                <label style="font-weight: 600; color: #28a745; font-size: 0.9em;">2. Нормализация:</label>
                                 <textarea id="editNormalization" class="edit-textarea" placeholder="Это нормально..." style="min-height: 60px; margin-top: 5px;"></textarea>
                             </div>
                             <div>
-                                <label style="font-weight: 600; color: #764ba2; font-size: 0.9em;">3. Решение (конкретные шаги):</label>
+                                <label style="font-weight: 600; color: #764ba2; font-size: 0.9em;">3. Решение:</label>
                                 <textarea id="editSolution" class="edit-textarea" placeholder="Давайте сделаем..." style="min-height: 60px; margin-top: 5px;"></textarea>
                             </div>
                         </div>
@@ -843,7 +950,6 @@
                     </div>
                 </div>
 
-                <!-- Вкладка AI -->
                 <div id="tab-content-ai" class="hidden">
                     <div class="panel">
                         <div class="panel-title">📨 Сообщение ученика</div>
@@ -852,7 +958,6 @@
 
                     <div class="panel ai-settings">
                         <div class="panel-title">⚙️ Настройки AI</div>
-                        
                         <div class="setting-row">
                             <label class="setting-label">Провайдер:</label>
                             <select id="aiProvider" onchange="toggleProvider()">
@@ -861,14 +966,12 @@
                                 <option value="anthropic">Anthropic Claude</option>
                             </select>
                         </div>
-
                         <div id="cloudSettings">
                             <div class="setting-row">
                                 <label class="setting-label">API Ключ:</label>
                                 <input type="password" id="apiKey" placeholder="sk-... или ant-...">
                             </div>
                         </div>
-
                         <div id="ollamaSettings" class="hidden">
                             <div class="setting-row">
                                 <label class="setting-label">URL Ollama:</label>
@@ -879,11 +982,9 @@
                                 <select id="ollamaModel">
                                     <option value="llama2">llama2</option>
                                     <option value="mistral">mistral</option>
-                                    <option value="neural-chat">neural-chat</option>
                                 </select>
                             </div>
                         </div>
-
                         <div class="setting-row">
                             <label class="setting-label">Стиль:</label>
                             <select id="temperature">
@@ -892,186 +993,94 @@
                                 <option value="1.0">🟠 Тёплый</option>
                             </select>
                         </div>
-
                         <button class="btn-generate" onclick="generateAIResponse()" id="generateBtn">
                             <span class="spinner" id="spinner"></span>
-                            <span id="btnText">✨ Сгенерировать</span>
+                            <span id="btnText">✨ Сгенерировать ответ</span>
                         </button>
-
                         <div id="errorMessage" class="error-message"></div>
                     </div>
 
                     <div id="aiResults" class="hidden">
-                        <div class="panel-title">📝 Варианты ответов</div>
+                        <div class="panel-title">📝 Результат</div>
                         <div id="aiResponsesContainer"></div>
                     </div>
                 </div>
 
-                <!-- Вкладка Самопомощь -->
                 <div id="tab-content-selfcare" class="hidden">
                     <div class="selfcare-grid">
-                        <!-- Диагностика -->
                         <div class="panel selfcare-card">
                             <div class="panel-title">🔍 Диагностика состояния</div>
                             <p style="margin-bottom: 15px; color: #666; font-size: 0.95em;">
-                                Отметьте, что вы сейчас чувствуете в теле:
+                                Отметьте, что чувствуете в теле:
                             </p>
-                            
                             <div class="checklist-item" onclick="toggleCheck(this)">
                                 <input type="checkbox" onchange="event.stopPropagation()">
-                                <div>
-                                    <strong>Напряжение в шее/челюсти</strong><br>
-                                    <small style="color: #666;">Признак гнева/раздражения</small>
-                                </div>
+                                <div><strong>Напряжение в шее/челюсти</strong><br><small style="color: #666;">Признак гнева</small></div>
                             </div>
-                            
                             <div class="checklist-item" onclick="toggleCheck(this)">
                                 <input type="checkbox" onchange="event.stopPropagation()">
-                                <div>
-                                    <strong>Учащённое дыхание</strong><br>
-                                    <small style="color: #666;">Стресс, готовность к конфликту</small>
-                                </div>
+                                <div><strong>Учащённое дыхание</strong><br><small style="color: #666;">Стресс</small></div>
                             </div>
-                            
                             <div class="checklist-item" onclick="toggleCheck(this)">
                                 <input type="checkbox" onchange="event.stopPropagation()">
-                                <div>
-                                    <strong>Ком в горле, слёзы</strong><br>
-                                    <small style="color: #666;">Печаль, переживание</small>
-                                </div>
+                                <div><strong>Ком в горле, слёзы</strong><br><small style="color: #666;">Печаль</small></div>
                             </div>
-                            
                             <div class="checklist-item" onclick="toggleCheck(this)">
                                 <input type="checkbox" onchange="event.stopPropagation()">
-                                <div>
-                                    <strong>Опущенные плечи, вялость</strong><br>
-                                    <small style="color: #666;">Усталость, горе</small>
-                                </div>
+                                <div><strong>Опущенные плечи</strong><br><small style="color: #666;">Усталость</small></div>
                             </div>
-
                             <div id="diagnosisResult" style="margin-top: 15px; padding: 12px; background: #e7f3ff; border-radius: 8px; display: none;">
                                 <strong>Рекомендация:</strong> <span id="diagnosisText"></span>
                             </div>
                         </div>
 
-                        <!-- Экстренная помощь -->
                         <div class="panel selfcare-card urgent">
                             <div class="panel-title">⚡ Экстренная разрядка (1-2 мин)</div>
-                            
-                            <button class="technique-btn" onclick="startBreathing()">
-                                🫁 Дыхание 5/8 (вдох 5, выдох 8)
-                            </button>
-                            
+                            <button class="technique-btn" onclick="startBreathing()">🫁 Дыхание 5/8</button>
                             <div id="breathingVisualizer" class="hidden" style="text-align: center; margin: 15px 0;">
                                 <div class="breathing-circle" id="breathCircle">Вдох</div>
                                 <div class="timer-display" id="breathTimer">Готов?</div>
                                 <button class="btn-small" onclick="stopBreathing()" style="margin-top: 10px;">Стоп</button>
                             </div>
-
-                            <button class="technique-btn" onclick="showTechnique('water')">
-                                💧 Холодная вода на запястья
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('fists')">
-                                ✊ Сжать-разжать кулаки (7 раз)
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('step')">
-                                👣 Отойти на 3 шага от экрана
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('cry')">
-                                😢 Разрешить себе всплакнуть (30 сек)
-                            </button>
-
-                            <!-- НОВЫЕ ПРАКТИКИ -->
-                            <button class="technique-btn" onclick="showTechnique('jar')" style="border-color: #ff6b6b; background: #fff5f5;">
-                                🫙 Крик в банку (без звука)
-                            </button>
+                            <button class="technique-btn" onclick="showTechnique('water')">💧 Холодная вода на запястья</button>
+                            <button class="technique-btn" onclick="showTechnique('fists')">✊ Сжать-разжать кулаки</button>
+                            <button class="technique-btn" onclick="showTechnique('cry')">😢 Разрешить всплакнуть</button>
                         </div>
 
-                        <!-- НОВЫЕ ПРАКТИКИ (5 минут) -->
                         <div class="panel selfcare-card" style="border-color: #ffa94d; background: #fff9e6;">
-                            <div class="panel-title">🔥 Новые техники разрядки</div>
-                            
-                            <button class="technique-btn" onclick="showTechnique('towel')">
-                                🧺 Мять мокрое полотенце (сила в руках)
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('ice')">
-                                🧊 Ледяной куб (шок для нервов)
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('chew')">
-                                🍞 Жевание (снять напряжение челюсти)
-                            </button>
-
-                            <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9em; color: #666;">
-                                <strong>💡 Почему это работает:</strong><br>
-                                • <strong>Банка</strong> — заглушает крик, даёт безопасность<br>
-                                • <strong>Полотенце</strong> — расходует силу без урона<br>
-                                • <strong>Лёд</strong> — мгновенно переключает нервную систему<br>
-                                • <strong>Жевание</strong> — снимает зажим челюсти (гнев часто там)
-                            </div>
+                            <div class="panel-title">🔥 Новые техники</div>
+                            <button class="technique-btn" onclick="showTechnique('jar')">🫙 Крик в банку (без звука)</button>
+                            <button class="technique-btn" onclick="showTechnique('towel')">🧺 Мять мокрое полотенце</button>
+                            <button class="technique-btn" onclick="showTechnique('ice')">🧊 Ледяной куб (шок)</button>
+                            <button class="technique-btn" onclick="showTechnique('chew')">🍞 Жевание (снять зажим челюсти)</button>
                         </div>
 
-                        <!-- Активные техники -->
                         <div class="panel selfcare-card sadness">
                             <div class="panel-title">🎯 Если есть 5 минут</div>
-                            
-                            <button class="technique-btn" onclick="showTechnique('wood')">
-                                🪓 «Рубить дрова» (энергично руками)
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('tear')">
-                                📄 Рвать ненужную бумагу
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('pushups')">
-                                💪 Отжаться 10-15 раз (переключить энергию)
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('moan')">
-                                📢 Попричитать в голос ("Ой-йой-йой...")
-                            </button>
-                            
-                            <button class="technique-btn" onclick="showTechnique('dish')">
-                                🍽️ Помыть посуду (канализация через действие)
-                            </button>
+                            <button class="technique-btn" onclick="showTechnique('wood')">🪓 «Рубить дрова»</button>
+                            <button class="technique-btn" onclick="showTechnique('tear')">📄 Рвать ненужную бумагу</button>
+                            <button class="technique-btn" onclick="showTechnique('moan')">📢 Попричитать в голос</button>
+                            <button class="technique-btn" onclick="showTechnique('dish')">🍽️ Помыть посуду</button>
                         </div>
 
-                        <!-- Вопросы для себя -->
                         <div class="panel selfcare-card prevent">
-                            <div class="panel-title">💬 Вопросы для проживания</div>
-                            <p style="margin-bottom: 15px; font-size: 0.9em; color: #666;">
-                                Если накрывает печаль, спросите себя:
-                            </p>
-                            
+                            <div class="panel-title">💬 Вопросы для себя</div>
                             <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
                                 <strong>Что я сейчас теряю?</strong>
-                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
-                                    Что уходит из моей жизни прямо сейчас?
-                                </div>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">Что уходит из моей жизни?</div>
                             </div>
-                            
                             <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
                                 <strong>Чего я лишился?</strong>
-                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
-                                    Что было дорого в том, что ушло?
-                                </div>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">Что было дорого?</div>
                             </div>
-                            
                             <div style="background: white; padding: 15px; border-radius: 8px;">
-                                <strong>Что мне не хочется отпускать?</strong>
-                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
-                                    Признать потерю — шаг к принятию
-                                </div>
+                                <strong>Что не хочу отпускать?</strong>
+                                <div style="font-size: 0.85em; color: #666; margin-top: 5px;">Признать = принять</div>
                             </div>
                         </div>
 
-                        <!-- Таблица справочник -->
                         <div class="panel" style="grid-column: 1 / -1;">
-                            <div class="panel-title">📋 Справочник: Эмоция → Действие</div>
+                            <div class="panel-title">📋 Справочник</div>
                             <table class="reference-table">
                                 <thead>
                                     <tr>
@@ -1083,70 +1092,62 @@
                                 <tbody>
                                     <tr>
                                         <td><strong>😤 Раздражение/Гнев</strong></td>
-                                        <td>Выдох со звуком, выпить воды, сжать кулаки, отойти от экрана, <strong>🫙 крик в банку</strong></td>
-                                        <td>Потопать, побить подушку, «рубить дрова», дыхание 5/8, <strong>🧺 мять полотенце</strong></td>
+                                        <td>Выдох со звуком, сжать кулаки, 🫙 крик в банку</td>
+                                        <td>Мять полотенце, «рубить дрова»</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>😔 Печаль/Горе</strong></td>
-                                        <td>Разрешить всплакнуть, зевнуть с потягиванием, обнять себя, кран с водой</td>
-                                        <td>Попричитать, помыть посуду, написать ответы на вопросы о потере</td>
-                                    </tr>
-                                    <tr style="background: #fff9e6;">
-                                        <td><strong>🆘 Срочный сброс</strong></td>
-                                        <td><strong>🧊 Ледяной куб</strong> — держать до ощущения жжения (30 сек)</td>
-                                        <td><strong>🍞 Жевание</strong> — интенсивно 2 минуты</td>
+                                        <td><strong>😔 Печаль</strong></td>
+                                        <td>Всплакнуть, зевнуть с потягиванием</td>
+                                        <td>Попричитать, помыть посуду</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Ресурсная копилка -->
                         <div class="panel" style="grid-column: 1 / -1;">
-                            <div class="panel-title">🏦 Моя ресурсная копилка</div>
+                            <div class="panel-title">🏦 Ресурсная копилка</div>
                             <div class="resource-grid">
                                 <div class="resource-item">
                                     <h4>🧣 Тело</h4>
                                     <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
-                                        <li>Тёплый мягкий плед</li>
-                                        <li>Ароматный чай (как у мамы)</li>
-                                        <li>Любимое эфирное масло</li>
+                                        <li>Тёплый плед</li>
+                                        <li>Ароматный чай</li>
+                                        <li>Эфирное масло</li>
                                     </ul>
                                 </div>
                                 <div class="resource-item">
                                     <h4>🧠 Мысль</h4>
                                     <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
-                                        <li>«Я сейчас большой/взрослый»</li>
-                                        <li>«Я могу дать себе уверенность»</li>
-                                        <li>«У меня всегда есть выбор»</li>
+                                        <li>«Я сейчас взрослый»</li>
+                                        <li>«Я могу справиться»</li>
+                                        <li>«У меня есть выбор»</li>
                                     </ul>
                                 </div>
                                 <div class="resource-item">
                                     <h4>🚶 Действие</h4>
                                     <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
-                                        <li>Открыть форточку на 2 мин</li>
-                                        <li>Прогулка без телефона (20 мин)</li>
-                                        <li>Включить радостную песню</li>
+                                        <li>Открыть форточку</li>
+                                        <li>Прогулка 20 мин</li>
+                                        <li>Радостная песня</li>
                                     </ul>
                                 </div>
                                 <div class="resource-item">
                                     <h4>📸 Память</h4>
                                     <ul style="margin-left: 15px; font-size: 0.9em; line-height: 1.8;">
-                                        <li>Семейные фото, где я счастлив</li>
-                                        <li>Ласковое имя из детства</li>
-                                        <li>Письмо благодарности себе</li>
+                                        <li>Семейные фото</li>
+                                        <li>Имя из детства</li>
+                                        <li>Письмо себе</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Напоминание -->
                         <div class="panel" style="grid-column: 1 / -1; background: #fff3cd; border-color: #ffc107;">
                             <div class="panel-title" style="color: #856404;">⚠️ Памятка</div>
                             <ul style="margin-left: 20px; line-height: 2; color: #856404;">
                                 <li><strong>«Сначала кислородную маску на себя»</strong> — вы не сможете помочь, если сами перегружены</li>
-                                <li><strong>Я проводник, а не спасатель</strong> — вы помогаете сделать первый шаг, а не несёте ответственность за чужое счастье</li>
-                                <li><strong>Называть эмоции</strong> — «Я сейчас злюсь» уже наполовину разряжает ситуацию</li>
-                                <li><strong>Маленькие шаги</strong> — лучше 1 минута дыхания сейчас, чем «завтра начну заботиться о себе»</li>
+                                <li><strong>Я проводник, а не спасатель</strong> — вы помогаете сделать первый шаг</li>
+                                <li><strong>Называть эмоции</strong> — «Я сейчас злюсь» уже наполовину разряжает</li>
                             </ul>
                         </div>
                     </div>
@@ -1156,7 +1157,7 @@
     </div>
 
     <script>
-        // База шаблонов ответов ученикам
+        // База шаблонов
         const templates = {
             confused1: {
                 acceptance: "Я понимаю, что сейчас это вызывает сложности и путаницу.",
@@ -1244,19 +1245,15 @@
         function switchTab(tab) {
             currentTab = tab;
             
-            // Скрываем все контенты
             document.getElementById('tab-content-templates').classList.add('hidden');
             document.getElementById('tab-content-ai').classList.add('hidden');
             document.getElementById('tab-content-selfcare').classList.add('hidden');
             
-            // Убираем активность с табов
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             
-            // Показываем нужный контент
             document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-${tab}`).classList.add('active');
             
-            // Управление сайдбаром
             if (tab === 'selfcare') {
                 document.getElementById('templatesSidebar').classList.add('hidden');
                 document.getElementById('selfcareSidebar').classList.remove('hidden');
@@ -1283,7 +1280,6 @@
             document.getElementById('formulaHint').style.display = 'block';
             document.getElementById('formulaText').textContent = t.formula;
             
-            // Скролл к конструктору
             document.getElementById('editAcceptance').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -1302,34 +1298,32 @@
             const fullText = parts.join('\n\n') + '\n\nЕсли останутся вопросы — обязательно напишите! 🤗';
             
             navigator.clipboard.writeText(fullText).then(() => {
-                alert('✅ Ответ скопирован в буфер обмена!');
+                alert('✅ Ответ скопирован!');
             });
         }
 
-        // Самопомощь функции
         function quickTechnique(type) {
             switch(type) {
                 case 'breathe':
                     startBreathing();
                     break;
                 case 'water':
-                    alert('💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд. Следите за дыханием.');
+                    alert('💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд.');
                     break;
                 case 'fists':
-                    let msg = '✊ Сожмите кулаки сильно-сильно (счёт: раз, два, три, четыре, пять, шесть, семь) — и резко разожмите. Почувствуйте, как уходит напряжение.';
-                    alert(msg);
+                    alert('✊ Сожмите кулаки сильно (счёт: 1-2-3-4-5-6-7) — и резко разожмите. Повторите 3 раза.');
                     break;
                 case 'step':
-                    alert('👣 Отойдите от экрана на 3 шага назад. Повернитесь спиной к нему. Сделайте 3 глубоких выдоха со звуком "Ха-а-а".');
+                    alert('👣 Отойдите от экрана на 3 шага. Повернитесь спиной. Сделайте 3 глубоких выдоха со звуком "Ха-а-а".');
                     break;
                 case 'name':
-                    const emotion = prompt('Какую эмоцию вы сейчас чувствуете? (например: злюсь, раздражена, боюсь)');
+                    const emotion = prompt('Какую эмоцию вы сейчас чувствуете?');
                     if (emotion) {
-                        alert(`📝 Вы сказали себе: "Я сейчас ${emotion}. Это моя эмоция, я её вижу. Я справлюсь."`);
+                        alert(`📝 "Я сейчас ${emotion}. Это моя эмоция, я её вижу. Я справлюсь."`);
                     }
                     break;
                 case 'jar':
-                    alert('🫙 Возьмите пластиковую банку (или подушку). Плотно прижмите горло к горлышку (или лицо к подушке). Крикните всё, что накипело — полностью, из живота. Банка заглушит звук, но вы выпустите пар.');
+                    alert('🫙 Возьмите пластиковую банку (1-2 литра). Плотно прижмите рот к горлышку. Крикните изо всей силы — банка заглушит звук, но вы выпустите пар.');
                     break;
             }
         }
@@ -1338,10 +1332,7 @@
             const checkbox = element.querySelector('input[type="checkbox"]');
             checkbox.checked = !checkbox.checked;
             element.classList.toggle('checked', checkbox.checked);
-            updateDiagnosis();
-        }
-
-        function updateDiagnosis() {
+            
             const checked = document.querySelectorAll('.checklist-item.checked').length;
             const resultDiv = document.getElementById('diagnosisResult');
             const textSpan = document.getElementById('diagnosisText');
@@ -1353,57 +1344,31 @@
             
             resultDiv.style.display = 'block';
             
-            // Простая логика диагностики
-            const anger = document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('шее') ||
-                         document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('дыхание');
-            const sadness = document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('горле') ||
-                           document.querySelectorAll('.checklist-item.checked')[0]?.textContent.includes('плечи');
-            
+            const anger = document.querySelector('.checklist-item.checked')?.textContent.includes('шее');
             if (anger) {
-                textSpan.textContent = 'У вас признаки гнева/раздражения. Используйте техники в красной панели «Экстренная разрядка»: дыхание, кулаки, холодная вода, 🫙 крик в банку.';
-            } else if (sadness) {
-                textSpan.textContent = 'У вас признаки печали. Разрешите себе поплакать, зевните с потягиванием, включите кран с водой.';
+                textSpan.textContent = 'У вас признаки гнева. Используйте: дыхание, кулаки, 🫙 крик в банку.';
             } else {
-                textSpan.textContent = 'Сделайте паузу 2 минуты. Выпейте воды. Отойдите от экрана.';
+                textSpan.textContent = 'Сделайте паузу 2 минуты. Выпейте воды.';
             }
         }
 
         function updateSelfcare(emotion) {
-            const body = document.getElementById('resource-body');
-            const mind = document.getElementById('resource-mind');
-            const action = document.getElementById('resource-action');
-            
-            if (emotion === 'anger') {
-                body.textContent = 'холодная вода на запястья, сжать кулаки';
-                mind.textContent = '"Я сейчас злюсь, и это пройтёт"';
-                action.textContent = 'отойти на 3 шага от экрана';
-            } else if (emotion === 'sadness') {
-                body.textContent = 'тёплый плед, чай';
-                mind.textContent = '"Я разрешаю себе быть слабым сейчас"';
-                action.textContent = 'позвонить другу/коллеге';
-            } else {
-                body.textContent = 'тёплый плед, чай';
-                mind.textContent = '"Я сейчас большой/взрослый"';
-                action.textContent = 'открыть форточку';
-            }
+            // Заглушка для демо
         }
 
         function showTechnique(tech) {
             const texts = {
-                water: '💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд. Почувствуйте, как нервы охлаждаются.',
-                fists: '✊ Сожмите кулаки сильно (1-2-3-4-5-6-7) и резко разожмите. Повторите 3 раза. Напряжение уходит через пальцы.',
-                step: '👣 Отойдите от стола. Сделайте 3 шага назад. Повернитесь спиной к экрану. 3 глубоких выдоха со звуком.',
-                cry: '😢 Если идут слёзы — разрешите им быть. Помните: "Слёзы разряжают горе". 30 секунд — и станет легче.',
-                wood: '🪓 Представьте, что рубите дрова. Энергичные движения руками вниз. 1 минута — выбросите агрессию.',
-                tear: '📄 Возьмите ненужную бумагу. Медленно рвите её на мелкие кусочки. Ощущайте, как разрушается напряжение.',
-                pushups: '💪 Опуститесь на пол. Сделайте 10 отжиманий (или от стены). Переключите энергию гнева в мышцы.',
-                moan: '📢 Закройте дверь. Произнесите громко: "Ой-йой-йой..." или "Ух-ху-ху...". Не сдерживайте звук.',
-                dish: '🍽️ Возьмите губку. Мойте посуду (или просто протирайте стол). Фокус на ощущениях — горе уходит через руки.',
-                // НОВЫЕ ТЕХНИКИ
-                jar: '🫙 Возьмите пластиковую банку (1-2 литра) или подушку.\n\n1. Плотно прижмите рот к горлышку банки (или лицо к подушке)\n2. Крикните изо всей силы — полностью, из живота, всё, что накипело\n3. Банка заглушит звук на 80%, но вы выпустите пар и разрядите грудную клетку\n\nЭто безопасно для соседей и голосовых связок.',
+                water: '💧 Подойдите к раковине. Включите холодную воду и держите запястья под струёй 30 секунд.',
+                fists: '✊ Сожмите кулаки сильно (1-2-3-4-5-6-7) и резко разожмите. Повторите 3 раза.',
+                cry: '😢 Если идут слёзы — разрешите им быть. Помните: "Слёзы разряжают горе".',
+                jar: '🫙 Возьмите пластиковую банку (1-2 литра) или подушку.\n\n1. Плотно прижмите рот к горлышку банки (или лицо к подушке)\n2. Крикните изо всей силы — полностью, из живота, всё что накипело\n3. Банка заглушит звук на 80%, но вы выпустите пар и разрядите грудную клетку\n\nЭто безопасно для соседей и голосовых связок.',
                 towel: '🧺 Возьмите мокрое полотенце (или смочите сухое).\n\n1. Сомните его в тугой комок\n2. Крутите, сжимайте, мяйте изо всех сил — как будто хотите выжать всю воду\n3. Делайте это энергично 2-3 минуты\n\nПочему работает: расходует силу мышц рук (гнев часто "застревает" в кулаках), безопасно для окружающих.',
                 ice: '🧊 Возьмите кубик льда (или замороженную лепёшку).\n\n1. Сожмите его в кулаке или приложите к запястью\n2. Держите, пока не почувствуете сильное жжение/холод (30-60 секунд)\n3. Переключите на другое запястье\n\nПочему работает: мгновенный шок для нервной системы переключает внимание с эмоции на физическое ощущение. Эффективно при панике и сильном раздражении.',
-                chew: '🍞 Возьмите сухарь, жвачку или яблоко.\n\n1. Жуйте интенсивно, активно, с силой\n2. Сконцентрируйтесь на ощущениях в челюсти\n3. Продолжайте 2-3 минуты\n\nПочему работает: гнев часто "застревает" в сжатой челюсти. Активное жевание снимает мышечный зажим и снижает уровень кортизола.'
+                chew: '🍞 Возьмите сухарь, жвачку или яблоко.\n\n1. Жуйте интенсивно, активно, с силой\n2. Сконцентрируйтесь на ощущениях в челюсти\n3. Продолжайте 2-3 минуты\n\nПочему работает: гнев часто "застревает" в сжатой челюсти. Активное жевание снимает мышечный зажим и снижает уровень кортизола.',
+                wood: '🪓 Представьте, что рубите дрова. Энергичные движения руками вниз. 1 минута — выбросите агрессию.',
+                tear: '📄 Возьмите ненужную бумагу. Медленно рвите её на мелкие кусочки.',
+                moan: '📢 Закройте дверь. Произнесите громко: "Ой-йой-йой..." или "Ух-ху-ху...". Не сдерживайте звук.',
+                dish: '🍽️ Возьмите губку. Мойте посуду (или просто протирайте стол). Фокус на ощущениях — горе уходит через руки.'
             };
             
             alert(texts[tech] || 'Техника выбрана');
@@ -1416,7 +1381,7 @@
             
             visualizer.classList.remove('hidden');
             
-            let phase = 'inhale'; // inhale or exhale
+            let phase = 'inhale';
             let count = 5;
             
             const updateCircle = () => {
@@ -1441,7 +1406,7 @@
                 if (count === 0) {
                     if (phase === 'inhale') {
                         phase = 'exhale';
-                        count = 8; // Выдох длиннее
+                        count = 8;
                     } else {
                         phase = 'inhale';
                         count = 5;
@@ -1460,7 +1425,6 @@
             document.getElementById('breathingVisualizer').classList.add('hidden');
         }
 
-        // AI функции (упрощённые для примера)
         function toggleProvider() {
             const provider = document.getElementById('aiProvider').value;
             const cloud = document.getElementById('cloudSettings');
@@ -1482,15 +1446,13 @@
                 return;
             }
             
-            // Здесь должна быть реальная интеграция с API
-            // Для демо показываем заглушку
             document.getElementById('aiResults').classList.remove('hidden');
             const container = document.getElementById('aiResponsesContainer');
             
             container.innerHTML = `
                 <div class="variant-card">
                     <div class="variant-actions">
-                        <span class="badge" style="background: #d4edda; color: #155724;">Вариант 1</span>
+                        <span class="badge badge-universal" style="background: #d4edda; color: #155724;">AI Вариант</span>
                     </div>
                     <div class="variant-text">
                         Я вижу, что вам сейчас сложно, и это понятно — такие ситуации выматывают. Многие участники проходят через подобное, вы не одиноки. Давайте разберёмся вместе: что именно вызвало трудность? Я помогу найти решение.
@@ -1504,9 +1466,10 @@
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
-            // Открываем первую категорию по умолчанию
-            document.querySelector('.category-header').click();
+            const firstHeader = document.querySelector('.category-header');
+            if (firstHeader) toggleCategory(firstHeader);
         });
     </script>
 </body>
 </html>
+```

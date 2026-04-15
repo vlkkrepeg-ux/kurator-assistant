@@ -835,6 +835,7 @@
                     </div>
 
                     <div class="sidebar-title">🧘 Ресурсы куратора</div>
+                    
                     <div class="template-category">
                         <div class="category-header selfcare" onclick="toggleCategory(this)">
                             <span>Быстрая диагностика</span>
@@ -856,6 +857,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- ДОБАВЛЕН БЛОК МОЯ КОПИЛКА -->
+                    <div class="template-category">
+                        <div class="category-header selfcare" onclick="toggleCategory(this)">
+                            <span>🏦 Моя копилка</span>
+                        </div>
+                        <div class="template-list open">
+                            <div style="padding: 10px; font-size: 0.85em;">
+                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 6px;">
+                                    <strong>🧣 Тело:</strong> <span id="resource-body">тёплый плед, чай, эфирное масло</span>
+                                </div>
+                                <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 6px;">
+                                    <strong>🧠 Мысль:</strong> <span id="resource-mind">"Я сейчас взрослый, я могу дать себе уверенность"</span>
+                                </div>
+                                <div style="padding: 8px; background: white; border-radius: 6px;">
+                                    <strong>🚶 Действие:</strong> <span id="resource-action">открыть форточку, прогулка 20 мин</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -1001,13 +1023,7 @@
                             <button class="technique-btn" onclick="showTechnique('ice')">🧊 Ледяной куб (шок для нервов)</button>
                             <button class="technique-btn" onclick="showTechnique('chew')">🍞 Жевание (снять зажим челюсти)</button>
                         </div>
- <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9em; color: #666;">
-                                <strong>💡 Почему это работает:</strong><br>
-                                • <strong>Банка</strong> — заглушает крик, даёт безопасность<br>
-                                • <strong>Полотенце</strong> — расходует силу без урона<br>
-                                • <strong>Лёд</strong> — мгновенно переключает нервную систему<br>
-                                • <strong>Жевание</strong> — снимает зажим челюсти (гнев часто там)
-                            </div>
+
                         <div class="panel selfcare-card sadness">
                             <div class="panel-title">🎯 Если есть 5 минут</div>
                             <button class="technique-btn" onclick="showTechnique('wood')">🪓 «Рубить дрова»</button>
@@ -1272,7 +1288,25 @@
         }
 
         function updateSelfcare(emotion) {
-            console.log('Emotion:', emotion);
+            const body = document.getElementById('resource-body');
+            const mind = document.getElementById('resource-mind');
+            const action = document.getElementById('resource-action');
+            
+            if (!body || !mind || !action) return;
+            
+            if (emotion === 'anger') {
+                body.textContent = 'холодная вода на запястья, сжать кулаки';
+                mind.textContent = '"Я сейчас злюсь, и это пройдёт. Я взрослый."';
+                action.textContent = 'отойти на 3 шага от экрана, 🫙 крик в банку';
+            } else if (emotion === 'sadness') {
+                body.textContent = 'тёплый плед, чай';
+                mind.textContent = '"Я разрешаю себе быть слабым сейчас. Это нормально."';
+                action.textContent = 'позвонить другу/коллеге, обнять себя';
+            } else {
+                body.textContent = 'тёплый плед, чай, эфирное масло';
+                mind.textContent = '"Я сейчас взрослый, я могу дать себе уверенность"';
+                action.textContent = 'открыть форточку, прогулка 20 мин';
+            }
         }
 
         function showTechnique(tech) {
@@ -1281,12 +1315,12 @@
                 fists: '✊ Сожмите кулаки сильно (1-2-3-4-5-6-7) и резко разожмите. Повторите 3 раза.',
                 step: '👣 Отойдите от стола. Сделайте 3 шага назад. Повернитесь спиной к экрану.',
                 cry: '😢 Если идут слёзы — разрешите им быть. Помните: "Слёзы разряжают горе".',
-                jar: '🫙 Возьмите пластиковую банку (1-2 литра). Плотно прижмите рот к горлышку. Крикните изо всей силы. Банка заглушит звук, но вы выпустите пар.',
-                towel: '🧺 Возьмите мокрое полотенце. Сомните в тугой комок и мяйте изо всех сил 2-3 минуты.',
-                ice: '🧊 Возьмите кубик льда. Сожмите в кулаке до ощущения жжения (30-60 сек). Переключает нервную систему.',
-                chew: '🍞 Возьмите сухарь или яблоко. Жуйте интенсивно 2-3 минуты. Снимает зажим челюсти.',
+                jar: '🫙 Возьмите пластиковую банку (1-2 литра) или подушку.\n\n1. Плотно прижмите рот к горлышку банки (или лицо к подушке)\n2. Крикните изо всей силы — полностью, из живота\n3. Банка заглушит звук на 80%, но вы выпустите пар\n\nЭто безопасно для соседей и голосовых связок.',
+                towel: '🧺 Возьмите мокрое полотенце.\n\n1. Сомните его в тугой комок\n2. Крутите, сжимайте, мяйте изо всех сил — как будто хотите выжать всю воду\n3. Делайте это энергично 2-3 минуты\n\nПочему работает: расходует силу мышц рук (гнев часто "застревает" в кулаках), безопасно для окружающих.',
+                ice: '🧊 Возьмите кубик льда.\n\n1. Сожмите его в кулаке или приложите к запястью\n2. Держите, пока не почувствуете сильное жжение/холод (30-60 сек)\n3. Переключите на другое запястье\n\nМгновенный шок для нервной системы переключает внимание с эмоции на физическое ощущение.',
+                chew: '🍞 Возьмите сухарь, жвачку или яблоко.\n\n1. Жуйте интенсивно, активно, с силой\n2. Сконцентрируйтесь на ощущениях в челюсти\n3. Продолжайте 2-3 минуты\n\nГнев часто "застревает" в сжатой челюсти. Активное жевание снимает мышечный зажим.',
                 wood: '🪓 Представьте, что рубите дрова. Энергичные движения руками вниз. 1 минута.',
-                tear: '📄 Возьмите ненужную бумагу. Медленно рвите на мелкие кусочки.',
+                tear: '📄 Возьмите ненужную бумагу. Медленно рвите её на мелкие кусочки.',
                 pushups: '💪 Сделайте 10 отжиманий (или от стены). Переключите энергию в мышцы.',
                 moan: '📢 Закройте дверь. Произнесите громко: "Ой-йой-йой..." Не сдерживайте звук.',
                 dish: '🍽️ Возьмите губку. Мойте посуду. Фокус на ощущениях.'
@@ -1381,7 +1415,7 @@
             container.innerHTML = `
                 <div class="variant-card">
                     <div class="variant-actions">
-                        <span class="badge" style="background: #d4edda; color: #155724;">AI Вариант</span>
+                        <span class="badge badge-universal" style="background: #d4edda; color: #155724;">AI Вариант</span>
                     </div>
                     <div class="variant-text">
                         Я вижу, что вам сейчас сложно, и это понятно — такие ситуации выматывают. Многие участники проходят через подобное, вы не одиноки. Давайте разберёмся вместе: что именно вызвало трудность? Я помогу найти решение.
@@ -1395,4 +1429,3 @@
     </script>
 </body>
 </html>
-```
